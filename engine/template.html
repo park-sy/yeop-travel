@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#eef1f0">
+<title>{{title}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: 한 손 엄지 스크롤용 단일 컬럼. 일차 목록(카드 + 이동 연결선) → 장소 상세(타입별 9개 목차) */
+:root{
+  --bg:#eef1f0; --surface:#ffffff; --ink:#16201f; --muted:#5b6866; --line:#d5dcda;
+  --river:#1f5d57; --river-soft:#dcebe8;      /* 명소 · 자링강 녹청 */
+  --gold:#8a6410; --gold-soft:#f5ead2;        /* 가게 · 등롱 금색 */
+  --chili:#b3261e; --chili-soft:#f8e3e0;      /* 주의 · 고추기름 */
+  --f-display:"Noto Serif SC","Songti SC",serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1514;--surface:#18201f;--ink:#e6ecea;--muted:#9aa8a5;--line:#2a3533;
+  --river:#6fc0b5;--river-soft:#1c3330;--gold:#e2b75a;--gold-soft:#332a17;--chili:#ff8a7e;--chili-soft:#3a1f1c;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1514;--surface:#18201f;--ink:#e6ecea;--muted:#9aa8a5;--line:#2a3533;
+  --river:#6fc0b5;--river-soft:#1c3330;--gold:#e2b75a;--gold-soft:#332a17;--chili:#ff8a7e;--chili-soft:#3a1f1c;color-scheme:dark}
+
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid var(--river);outline-offset:2px}
+img{max-width:100%;display:block}
+
+/* 표지 */
+.cover{position:relative;color:#fff;background:#0b1211}
+.cover img{width:100%;height:260px;object-fit:cover;opacity:.72}
+.cover .wrap{position:absolute;inset:auto 0 0 0;padding-block:0 18px}
+.cover .eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.12em;opacity:.85}
+.cover h1{font-family:var(--f-display);font-weight:900;font-size:34px;line-height:1.15;margin:8px 0 4px;text-wrap:balance;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.cover p{margin:0;font-size:13px;opacity:.9;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.credit{font-size:10px;opacity:.7}
+
+/* 탭 */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+nav.tabs .wrap::-webkit-scrollbar{display:none}
+nav.tabs button{flex:0 0 auto;min-height:44px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:500;font-size:14px;line-height:1.2;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center}
+nav.tabs button small{font:500 11px/1.2 var(--f-mono);color:var(--muted)}
+nav.tabs button[aria-selected="true"]{background:var(--river);border-color:var(--river);color:var(--bg)}
+nav.tabs button[aria-selected="true"] small{color:var(--bg);opacity:.8}
+
+main{padding-block:16px 48px}
+.daylead{margin:4px 0 16px}
+.daylead h2{font-family:var(--f-display);font-size:24px;margin:0;line-height:1.3;text-wrap:balance}
+.daylead p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+
+/* 장소 카드 */
+.card{display:grid;grid-template-columns:64px 1fr 16px;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;cursor:pointer;position:relative;z-index:1}
+.card:active{transform:scale(.99)}
+.card.spot{border-left:4px solid var(--river)}
+.card.shop{border-left:4px solid var(--gold)}
+.thumb{width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--river-soft)}
+.glyph{width:64px;height:64px;border-radius:10px;display:flex;align-items:center;justify-content:center;font:900 30px var(--f-display)}
+.spot .glyph{background:var(--river-soft);color:var(--river)}
+.shop .glyph{background:var(--gold-soft);color:var(--gold)}
+.cbody{min-width:0}
+.crow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.time{font:500 12px/1 var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.card h3{margin:4px 0 2px;font-size:17px;line-height:1.3}
+.card .one{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.chev{color:var(--muted);font-size:18px}
+.tchip{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px}
+.tchip.spot{background:var(--river-soft);color:var(--river)}
+.tchip.shop{background:var(--gold-soft);color:var(--gold)}
+.badge{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px}
+.b-ok{background:var(--river-soft);color:var(--river)} .b-pay{background:var(--gold-soft);color:var(--gold)}
+.b-wait{background:var(--chili-soft);color:var(--chili)} .b-walk{color:var(--muted);border:1px solid var(--line)}
+
+/* 이동 연결선 */
+.move{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;padding:6px 10px 6px 14px;position:relative;min-height:58px}
+.move::before{content:"";position:absolute;left:46px;top:0;bottom:0;border-left:2px dotted var(--muted);opacity:.6}
+.mico{width:36px;height:36px;margin-left:15px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px;position:relative}
+.mtxt{font-size:13px;line-height:1.4}
+.mtxt b{font-size:14px}
+.mtxt .cost{font-family:var(--f-mono);color:var(--muted);font-size:12px}
+.mtxt small{display:block;color:var(--muted)}
+.minor{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;padding:4px 10px;position:relative;z-index:1}
+.minor .dot{width:14px;height:14px;margin-left:25px;border-radius:50%;background:var(--muted)}
+.minor div{font-size:14px} .minor .time{margin-right:6px}
+.minor small{color:var(--muted)}
+.branch{margin:6px 0;font-size:13px;color:var(--gold);background:var(--gold-soft);border-radius:10px;padding:8px 12px;position:relative;z-index:1}
+.branch b{display:block}
+
+/* 상세 */
+.back{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.back .wrap{display:flex;align-items:center;justify-content:space-between;min-height:52px}
+.back button{background:none;border:0;cursor:pointer;font-weight:500;min-height:44px;padding:0;color:var(--river)}
+.back span{font-size:12px;color:var(--muted)}
+.dhero{margin:0}
+.dhero img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.dhero figcaption{font-size:10px;color:var(--muted);padding:4px 0 0}
+.dhead{padding-block:14px 4px}
+.dhead h2{font-family:var(--f-display);font-size:26px;line-height:1.25;margin:6px 0 4px;text-wrap:balance}
+.dhead .one{margin:0 0 8px;color:var(--muted)}
+.cn{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cn button{font-family:var(--f-display);font-weight:600;font-size:15px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-height:40px;cursor:pointer;text-align:left;word-break:break-all}
+.cn button::after{content:" 복사";font:500 11px var(--f-body);color:var(--muted)}
+.copied::after{content:" 복사됨"!important;color:var(--river)!important}
+.cn a{font-size:13px;font-weight:500;color:var(--river);text-decoration:none;min-height:40px;display:inline-flex;align-items:center;padding:0 4px}
+.toc{display:flex;gap:6px;overflow-x:auto;padding-block:12px;scrollbar-width:none}
+.toc::-webkit-scrollbar{display:none}
+.toc button{flex:0 0 auto;font-size:12px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 10px;cursor:pointer;min-height:34px}
+.toc button b{font-family:var(--f-mono);color:var(--muted);margin-right:4px;font-weight:500}
+.dsec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;scroll-margin-top:64px}
+.dsec h3{margin:0 0 8px;font-size:16px;display:flex;gap:8px;align-items:baseline}
+.dsec h3 b{font:500 12px var(--f-mono);color:var(--muted)}
+.dsec ul{margin:0;padding-left:18px} .dsec li{margin:3px 0}
+.dsec p{margin:0}
+.dsec.warn{background:var(--chili-soft);border-color:transparent} .dsec.warn h3{color:var(--chili)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;min-width:0}
+.stories{display:grid;gap:8px}
+.story{background:var(--bg);border-left:3px solid var(--river);border-radius:0 10px 10px 0;padding:8px 12px}
+.story b{font-size:14px} .story p{margin:3px 0 0;font-size:14px;line-height:1.55}
+.pc{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.pc div{border-radius:10px;padding:8px 12px;font-size:14px}
+.pc .pro{background:var(--river-soft)} .pc .con{background:var(--bg)}
+.pc b{font-size:12px}
+.dish{padding:10px 0;border-bottom:1px dashed var(--line)}
+.dish:first-child{padding-top:0} .dish:last-child{border-bottom:0;padding-bottom:0}
+.dish-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.dish-h b{font-size:15px}
+.price{font:500 12px var(--f-mono);color:var(--gold);white-space:nowrap}
+.dish-m{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 2px}
+.zh{font-family:var(--f-display);font-weight:600;font-size:14px;color:var(--river);background:var(--river-soft);border:0;border-radius:6px;padding:3px 8px;cursor:pointer;text-align:left;word-break:break-all}
+.spice{font-size:12px;letter-spacing:1px}
+.spice .off{opacity:.2}
+.spice em{font-style:normal;color:var(--muted);letter-spacing:0;margin-left:2px}
+.dish p{margin:0;font-size:14px}
+.order li{font-weight:500}
+.total{margin-top:8px;font:500 14px var(--f-mono);color:var(--gold)}
+.note{margin-top:4px;font-size:13px;color:var(--muted)}
+.src a{color:var(--river);font-size:14px}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.pager button{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;text-align:left;min-height:56px;font-size:13px}
+.pager button span{display:block;font-size:11px;color:var(--muted)}
+.pager .next{text-align:right}
+
+/* 공통 탭 */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.panel h3{margin:0 0 6px;font-size:17px}
+.panel ul{margin:0;padding-left:18px} .panel li{margin:3px 0}
+.phrase{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+.phrase:first-child{border-top:0;margin-top:0;padding-top:0}
+.phrase .zhb{font-family:var(--f-display);font-size:20px;font-weight:600}
+.phrase .ko{font-size:13px;color:var(--muted)}
+.phrase button{grid-row:1/3;grid-column:2;font-weight:600;font-size:13px;color:var(--river);background:var(--river-soft);border:0;border-radius:8px;padding:8px 10px;min-height:40px;cursor:pointer}
+.msteps{margin-top:6px}
+.msteps summary{cursor:pointer;color:var(--river);font-weight:600;font-size:13px;min-height:32px;display:flex;align-items:center}
+.msteps ol{margin:4px 0 6px;padding-left:20px;font-size:13px} .msteps li{margin:4px 0}
+.linkbtn{background:none;border:0;padding:4px 0;color:var(--river);font-weight:600;font-size:13px;cursor:pointer;text-decoration:underline}
+.stepper{list-style:none;margin:8px 0 0;padding:0;counter-reset:st}
+.stepper li{display:grid;grid-template-columns:40px 1fr;gap:10px;position:relative;padding-bottom:14px}
+.stepper li:not(:last-child)::before{content:"";position:absolute;left:19px;top:40px;bottom:0;border-left:2px dotted var(--muted);opacity:.6}
+.stepper .sico{width:40px;height:40px;border-radius:50%;background:var(--river-soft);display:flex;align-items:center;justify-content:center;font-size:19px}
+.stepper li>div>b{display:block;font-size:15px} .stepper span{font-size:13px;color:var(--muted)}
+.prep{counter-reset:pr;list-style:none;padding:0;margin:6px 0 0}
+.prep li{counter-increment:pr;position:relative;padding-left:30px;margin:8px 0;font-size:14px}
+.prep li::before{content:counter(pr);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--river);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.prep li span{display:block;font-size:13px;color:var(--muted)}
+.muted-s{margin:8px 0 0;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.panel h4{margin:14px 0 4px;font-size:15px}
+.warnlist li::marker{color:var(--chili)}
+.callout{border-left:3px solid var(--chili);padding:6px 0 6px 12px;margin:0 0 14px;font-size:14px}
+footer{color:var(--muted);font-size:12px;padding-block:12px 32px;border-top:1px solid var(--line)}
+footer details{margin-top:8px} footer summary{cursor:pointer}
+</style>
+</head>
+<body>
+
+<header class="cover" id="cover">
+  <img id="coverimg" alt="{{cover_alt}}">
+  <div class="wrap">
+    <div class="eyebrow">{{eyebrow}}</div>
+    <h1>{{headline}}</h1>
+    <p>카드를 누르면 장소별 상세. 중국어 이름은 누르면 복사돼요.</p>
+  </div>
+</header>
+
+<nav class="tabs" id="tabsnav" aria-label="일차"><div class="wrap" role="tablist" id="tabs"></div></nav>
+<div class="back" id="backbar" hidden><div class="wrap"><button type="button" id="backbtn">← 목록</button><span id="backtype"></span></div></div>
+
+<main><div class="wrap" id="view"></div></main>
+
+<footer><div class="wrap">
+  {{footer}}
+  <details><summary>사진 출처 (Wikimedia Commons)</summary><ul id="credits"></ul></details>
+</div></footer>
+
+<script>
+/*DATA*/
+const TRIP = /*TRIP*/;
+const IMG = /*IMAGES*/;
+const CREDITS = /*CREDITS*/;
+</script>
+<script>
+const SPOT_TOC = [["glance","한눈에"],["about","어떤 곳인가"],["story","가이드 이야기"],["see","꼭 볼 것·할 것"],["photo","사진 스팟"],["route","가는 법·동선"],["entry","입장·예약"],["warn","주의할 점"],["planb","플랜 B"],["src","출처"]];
+const SHOP_TOC = [["glance","한눈에"],["about","어떤 집인가"],["menu","대표 메뉴·코스"],["order","우리 3명 추천 주문"],["pay","주문·결제"],["queue","웨이팅·자리 팁"],["warn","주의할 점"],["planb","플랜 B"],["src","출처"]];
+const TYPE = {spot:"명소", shop:"가게"};
+const BADGE = {ok:["확정","b-ok"],pay:["예매 필요","b-pay"],open:["오픈 대기","b-pay"],wait:["현장 웨이팅","b-wait"],line:["원격 줄서기","b-wait"],free:["무료","b-walk"],opt:["선택","b-walk"],cand:["후보","b-walk"]};
+const MOVE = {walk:["🚶","도보"],didi:["🚕","디디"],metro:["🚇","지하철"],mall:["🏬","몰 안 이동"],cable:["🚡","케이블카"]};
+const AMAP = q => TRIP.map_search + encodeURIComponent(q);
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ul = a => "<ul>" + a.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>";
+const badge = k => k ? `<span class="badge ${BADGE[k][1]}">${BADGE[k][0]}</span>` : "";
+const imgSrc = k => k && IMG[k] ? IMG[k] : null;
+const glyph = p => (p.cn.match(/[一-鿿]/) || ["·"])[0];
+
+/* ───── 일차 목록 ───── */
+function cardHTML(id){
+  const p = PLACES[id]; const src = imgSrc(p.img);
+  const th = src ? `<img class="thumb" src="${src}" alt="" loading="lazy">` : `<div class="glyph">${glyph(p)}</div>`;
+  return `<button type="button" class="card ${p.type}" data-open="${id}">${th}
+    <div class="cbody"><div class="crow"><span class="time">${esc(p.t)}</span><span class="tchip ${p.type}">${TYPE[p.type]}</span>${badge(p.badge)}</div>
+    <h3>${esc(p.name)}</h3><p class="one">${esc(p.one)}</p></div><span class="chev" aria-hidden="true">›</span></button>`;
+}
+function metroStepsHTML(steps){
+  return `<details class="msteps"><summary>▸ 단계별로 보기 (${steps.length}단계)</summary><ol>${steps.map(x => `<li>${x}</li>`).join("")}</ol>
+<button type="button" class="linkbtn" data-goto="metro">처음 타면: 지하철 타는 법 전체 보기 →</button></details>`;
+}
+function metroPanelHTML(){
+  const kv = METRO.fare.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+  return `<section class="panel" id="metro"><h3>🚇 지하철 타는 법</h3>
+<p class="muted-s">한국에서 미리 준비 (5분)</p><ol class="prep">${METRO.prep.map(([t, d]) => `<li><b>${t}</b><span>${d}</span></li>`).join("")}</ol>
+<p class="muted-s" style="margin-top:14px">역에서 순서대로</p><ol class="stepper">${METRO.steps.map(([ic, t, d]) => `<li><div class="sico" aria-hidden="true">${ic}</div><div><b>${t}</b><span>${d}</span></div></li>`).join("")}</ol>
+<dl class="kv" style="margin-top:4px">${kv}</dl>
+<h4>QR이 안 될 때: 1회용 표 사기</h4><ul>${METRO.ticket.map(x => `<li>${x}</li>`).join("")}</ul>
+<h4>주의</h4><ul class="warnlist">${METRO.warn.map(x => `<li>${x}</li>`).join("")}</ul></section>`;
+}
+function moveHTML(m){
+  const [ic, label] = MOVE[m.move];
+  return `<div class="move"><span class="mico" aria-hidden="true">${ic}</span><div class="mtxt"><b>${label} ${esc(m.min)}</b>${m.cost ? ` <span class="cost">· ${esc(m.cost)}</span>` : ""}${m.note ? `<small>${esc(m.note)}</small>` : ""}${m.steps ? metroStepsHTML(m.steps) : ""}</div></div>`;
+}
+function dayHTML(d){
+  const n = d.flow.filter(x => x.stop); const spots = n.filter(x => PLACES[x.stop].type === "spot").length;
+  const rows = d.flow.map(x => x.stop ? cardHTML(x.stop) : x.move ? moveHTML(x) : x.branch
+    ? `<div class="branch"><b>${esc(x.branch)}</b>${esc(x.note)}</div>`
+    : `<div class="minor"><span class="dot"></span><div><span class="time">${esc(x.t)}</span>${esc(x.name)}${x.note ? ` <small>· ${esc(x.note)}</small>` : ""}</div></div>`).join("");
+  return `<div class="daylead"><h2>${esc(d.title)}</h2><p>${esc(d.sub)}</p>
+    <div class="legend"><span><span class="tchip spot">명소</span> ${spots}곳</span><span><span class="tchip shop">가게</span> ${n.length - spots}곳</span><span>🚶 도보 🚕 디디 🚇 지하철</span></div></div>${rows}`;
+}
+
+/* ───── 장소 상세 ───── */
+const spiceHTML = n => n === 0 ? `<span class="spice"><em>안 매움</em></span>`
+  : `<span class="spice" aria-label="맵기 ${n}단계">${"🌶".repeat(n)}<span class="off">${"🌶".repeat(3 - n)}</span></span>`;
+const SECTION = {
+  glance: p => `<dl class="kv"><dt>우리 일정</dt><dd>${esc(p.t)} · ${esc(p.stay)}</dd>${p.glance.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`,
+  about: p => typeof p.about === "string" ? `<p>${esc(p.about)}</p>`
+    : `<p>${esc(p.about.text)}</p><div class="pc"><div class="pro"><b>좋다는 점</b>${ul(p.about.pros)}</div><div class="con"><b>아쉽다는 점</b>${ul(p.about.cons)}</div></div>`,
+  menu: p => p.menu.map(([ko, zh, price, sp, desc]) => `<div class="dish"><div class="dish-h"><b>${esc(ko)}</b>${price ? `<span class="price">${esc(price)}</span>` : ""}</div>
+      <div class="dish-m"><button type="button" class="zh" data-copy="${esc(zh)}">${esc(zh)}</button>${spiceHTML(sp)}</div><p>${esc(desc)}</p></div>`).join(""),
+  order: p => `<ul class="order">${p.order.items.map(x => `<li>${esc(x)}</li>`).join("")}</ul><div class="total">${esc(p.order.total)}</div>${p.order.note ? `<div class="note">${esc(p.order.note)}</div>` : ""}`,
+  story: p => `<div class="stories">${p.story.map(([t, d]) => `<div class="story"><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("")}</div>`,
+  src: p => `<ul class="src">${p.src.map(([n, u]) => u ? `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a></li>` : `<li>${esc(n)}</li>`).join("")}${p.img && CREDITS[p.img] ? `<li>사진: ${esc(CREDITS[p.img].artist)} · ${esc(CREDITS[p.img].license)} (Wikimedia Commons)</li>` : ""}</ul>`
+};
+const listSection = key => p => ul(p[key]);
+
+function detailHTML(id){
+  const p = PLACES[id]; const toc = p.type === "spot" ? SPOT_TOC : SHOP_TOC;
+  const day = DAYS.find(d => d.id === p.day); const stops = day.flow.filter(x => x.stop).map(x => x.stop);
+  const i = stops.indexOf(id); const prev = stops[i - 1], next = stops[i + 1];
+  const src = imgSrc(p.img);
+  const hero = src ? `<figure class="dhero"><img src="${src}" alt="${esc(p.name)}">${CREDITS[p.img] ? `<figcaption>${p.img === "nanan" ? "남안구 강변 · " : ""}${esc(CREDITS[p.img].artist)} · ${esc(CREDITS[p.img].license)}</figcaption>` : ""}</figure>` : "";
+  const secs = toc.map(([k, label], n) => `<section class="dsec${k === "warn" ? " warn" : ""}" id="sec-${k}"><h3><b>${String(n + 1).padStart(2, "0")}</b>${label}</h3>${(SECTION[k] || listSection(k))(p)}</section>`).join("");
+  const pg = (pid, cls, dir) => pid ? `<button type="button" class="${cls}" data-open="${pid}"><span>${dir}</span>${esc(PLACES[pid].name)}</button>` : "<span></span>";
+  return `${hero}<div class="dhead"><div class="crow"><span class="tchip ${p.type}">${TYPE[p.type]}</span>${badge(p.badge)}<span class="time">${esc(day.tab)} · ${esc(p.t)}</span></div>
+    <h2>${esc(p.name)}</h2><p class="one">${esc(p.one)}</p>
+    <div class="cn"><button type="button" data-copy="${esc(p.cn)}">${esc(p.cn)}</button><a href="${AMAP(p.cn)}" target="_blank" rel="noopener">${esc(TRIP.map_label)} ↗</a></div></div>
+    <nav class="toc" aria-label="목차">${toc.map(([k, label], n) => `<button type="button" data-jump="sec-${k}"><b>${n + 1}</b>${label}</button>`).join("")}</nav>
+    ${secs}<div class="pager">${pg(prev, "prev", "← 이전")}${pg(next, "next", "다음 →")}</div>`;
+}
+
+/* ───── 라우팅 ───── */
+const TABS = [...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"}];
+const $ = id => document.getElementById(id);
+let lastDay = "d1";
+
+let pendingJump = null;
+function render(){
+  const h = location.hash.slice(1);
+  const place = h.startsWith("p-") && PLACES[h.slice(2)] ? h.slice(2) : null;
+  const tab = place ? null : (TABS.some(t => t.id === h) ? h : initialTab());
+  $("cover").hidden = !!place; $("tabsnav").hidden = !!place; $("backbar").hidden = !place;
+  if (place) {
+    const p = PLACES[place]; lastDay = p.day;
+    $("backbtn").textContent = "← " + DAYS.find(d => d.id === p.day).tab + " 목록";
+    $("backtype").textContent = TYPE[p.type] + " 상세";
+    $("view").innerHTML = detailHTML(place);
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (tab === "common") {
+    $("view").innerHTML = COMMON;
+    if ($("metroslot") && typeof METRO !== "undefined") $("metroslot").innerHTML = metroPanelHTML();
+    if (pendingJump) { const id = pendingJump; pendingJump = null; requestAnimationFrame(() => $(id)?.scrollIntoView({block:"start"})); }
+    if ($("phrases") && typeof PHRASES !== "undefined") $("phrases").innerHTML = PHRASES.map(([ko, zh]) => `<div class="phrase"><span class="zhb">${esc(zh)}</span><span class="ko">${esc(ko)}</span><button type="button" data-copy="${esc(zh)}">복사</button></div>`).join("");
+  } else {
+    lastDay = tab; $("view").innerHTML = dayHTML(DAYS.find(d => d.id === tab));
+  }
+  [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+  try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
+}
+function initialTab(){
+  const today = new Intl.DateTimeFormat("en-CA", {timeZone:TRIP.tz}).format(new Date());
+  const d = DAYS.find(x => x.iso === today); if (d) return d.id;
+  try { const s = localStorage.getItem(TRIP.slug + "-tab"); if (TABS.some(t => t.id === s)) return s; } catch (e) {}
+  return "d1";
+}
+
+$("tabs").innerHTML = TABS.map(t => `<button type="button" role="tab" data-id="${t.id}">${t.label}<small>${t.small}</small></button>`).join("");
+$("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) location.hash = b.dataset.id; });
+$("backbtn").addEventListener("click", () => { location.hash = lastDay; });
+document.addEventListener("click", async e => {
+  const open = e.target.closest("[data-open]"); if (open) { location.hash = "p-" + open.dataset.open; return; }
+  const go = e.target.closest("[data-goto]"); if (go) { pendingJump = go.dataset.goto; if (location.hash === "#common") render(); else location.hash = "common"; return; }
+  const jump = e.target.closest("[data-jump]"); if (jump) { $(jump.dataset.jump)?.scrollIntoView({behavior:"smooth", block:"start"}); return; }
+  const c = e.target.closest("[data-copy]"); if (!c) return;
+  try { await navigator.clipboard.writeText(c.dataset.copy); }
+  catch (err) { const r = document.createRange(); r.selectNodeContents(c); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  c.classList.add("copied"); setTimeout(() => c.classList.remove("copied"), 1500);
+});
+window.addEventListener("hashchange", render);
+$("coverimg").src = IMG.hero || "";
+$("credits").innerHTML = Object.entries(CREDITS).map(([k, c]) => `<li><a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.title.replace("File:", ""))}</a> · ${esc(c.artist)} · ${esc(c.license)}</li>`).join("");
+render();
+</script>
+</body>
+</html>
