@@ -108,11 +108,22 @@ main{padding-block:16px 48px}
 .dhead{padding-block:14px 4px}
 .dhead h2{font-family:var(--f-display);font-size:26px;line-height:1.25;margin:6px 0 4px;text-wrap:balance}
 .dhead .one{margin:0 0 8px;color:var(--muted)}
+/* 중국어 이름 복사 버튼 — 목록 카드·상세 머리·메뉴 행에서 같이 씀 */
+.cc{display:inline-flex;align-items:center;gap:8px;max-width:100%;background:var(--river-soft);color:var(--river);border:1px solid transparent;border-radius:9px;padding:6px 9px;min-height:38px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s}
+.cc .zht{font-family:var(--f-display);font-weight:600;font-size:14px;line-height:1.3;word-break:break-all}
+.cc .ccl{flex:0 0 auto;font:500 10px/1 var(--f-body);opacity:.75;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.cc .ccl::before{content:"⧉";font-size:12px;line-height:1}
+.cc:active{transform:scale(.985)}
+.cc.copied{background:var(--river);border-color:var(--river);color:var(--bg)}
+.cc.copied .ccl{opacity:1}
+.cc.big{min-height:44px;padding:8px 11px}
+.cc.big .zht{font-size:15px}
+.cnrow{display:flex;align-items:center;gap:8px;margin:-2px 0 6px 12px;padding-right:8px}
+.cnrow .cnlab{flex:0 0 auto;font:500 10px/1 var(--f-mono);color:var(--muted);letter-spacing:.08em}
+.cnrow .cc{flex:0 1 auto;min-width:0}
 .cn{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.cn button{font-family:var(--f-display);font-weight:600;font-size:15px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-height:40px;cursor:pointer;text-align:left;word-break:break-all}
-.cn button::after{content:" 복사";font:500 11px var(--f-body);color:var(--muted)}
-.copied::after{content:" 복사됨"!important;color:var(--river)!important}
 .cn a{font-size:13px;font-weight:500;color:var(--river);text-decoration:none;min-height:40px;display:inline-flex;align-items:center;padding:0 4px}
+.cc.copied .ccl::before{content:"✓"}
 .toc{display:flex;gap:6px;overflow-x:auto;padding-block:12px;scrollbar-width:none}
 .toc::-webkit-scrollbar{display:none}
 .toc button{flex:0 0 auto;font-size:12px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 10px;cursor:pointer;min-height:34px}
@@ -138,7 +149,8 @@ main{padding-block:16px 48px}
 .dish-h b{font-size:15px}
 .price{font:500 12px var(--f-mono);color:var(--gold);white-space:nowrap}
 .dish-m{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 2px}
-.zh{font-family:var(--f-display);font-weight:600;font-size:14px;color:var(--river);background:var(--river-soft);border:0;border-radius:6px;padding:3px 8px;cursor:pointer;text-align:left;word-break:break-all}
+.dish-m .cc{padding:4px 8px;min-height:34px}
+.dish-m .cc .zht{font-size:13px}
 .spice{font-size:12px;letter-spacing:1px}
 .spice .off{opacity:.2}
 .spice em{font-style:normal;color:var(--muted);letter-spacing:0;margin-left:2px}
@@ -178,6 +190,21 @@ main{padding-block:16px 48px}
 .panel h4{margin:14px 0 4px;font-size:15px}
 .warnlist li::marker{color:var(--chili)}
 .callout{border-left:3px solid var(--chili);padding:6px 0 6px 12px;margin:0 0 14px;font-size:14px}
+/* 이야기 탭 (충칭 역사·상식) */
+.storysec{scroll-margin-top:64px}
+.storysec h3{font-family:var(--f-display);font-size:19px;line-height:1.35}
+.storysec h3 b{font:500 11px var(--f-mono);color:var(--river);background:var(--river-soft);border-radius:6px;padding:2px 6px;margin-right:8px;vertical-align:2px}
+.storysec p{margin:0 0 10px;font-size:15px;line-height:1.68}
+.storysec p:last-child{margin:0}
+.storysec em{font-style:normal;color:var(--river);font-weight:700}
+.storysec ul{margin:0;padding-left:18px}
+.storysec ul+p{margin-top:10px}
+.tl{list-style:none;margin:8px 0 0;padding:0}
+.tl li{display:grid;grid-template-columns:58px 1fr;gap:10px;padding:8px 0;border-top:1px dashed var(--line);font-size:14px;line-height:1.55}
+.tl li:first-child{border-top:0;padding-top:0}
+.tl b{font:500 12px/1.6 var(--f-mono);color:var(--river);letter-spacing:-.01em}
+.fact{background:var(--bg);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:9px 12px;font-size:14px;line-height:1.6;margin:10px 0 0}
+.fact b{color:var(--gold)}
 footer{color:var(--muted);font-size:12px;padding-block:12px 32px;border-top:1px solid var(--line)}
 footer details{margin-top:8px} footer summary{cursor:pointer}
 </style>
@@ -189,7 +216,7 @@ footer details{margin-top:8px} footer summary{cursor:pointer}
   <div class="wrap">
     <div class="eyebrow">{{eyebrow}}</div>
     <h1>{{headline}}</h1>
-    <p>카드를 누르면 장소별 상세. 중국어 이름은 누르면 복사돼요.</p>
+    <p>카드를 누르면 장소별 상세. 목록·상세의 중국어 이름은 눌러서 복사.</p>
   </div>
 </header>
 
@@ -223,13 +250,17 @@ const badge = k => k ? `<span class="badge ${BADGE[k][1]}">${BADGE[k][0]}</span>
 const imgSrc = k => k && IMG[k] ? IMG[k] : null;
 const glyph = p => (p.cn.match(/[一-鿿]/) || ["·"])[0];
 
+/* 중국어 이름 복사 버튼. exact = 복사되는 글자 그대로 넣기 */
+const copyBtn = (text, cls = "") => `<button type="button" class="cc ${cls}" data-copy="${esc(text)}" aria-label="${esc(text)} 복사"><span class="zht">${esc(text)}</span><span class="ccl">복사</span></button>`;
+
 /* ───── 일차 목록 ───── */
 function cardHTML(id){
   const p = PLACES[id]; const src = imgSrc(p.img);
   const th = src ? `<img class="thumb" src="${src}" alt="" loading="lazy">` : `<div class="glyph">${glyph(p)}</div>`;
-  return `<button type="button" class="card ${p.type}" data-open="${id}">${th}
+  return `<div class="cardwrap"><button type="button" class="card ${p.type}" data-open="${id}">${th}
     <div class="cbody"><div class="crow"><span class="time">${esc(p.t)}</span><span class="tchip ${p.type}">${TYPE[p.type]}</span>${badge(p.badge)}</div>
-    <h3>${esc(p.name)}</h3><p class="one">${esc(p.one)}</p></div><span class="chev" aria-hidden="true">›</span></button>`;
+    <h3>${esc(p.name)}</h3><p class="one">${esc(p.one)}</p></div><span class="chev" aria-hidden="true">›</span></button>
+    <div class="cnrow"><span class="cnlab">中文</span>${copyBtn(p.cn)}</div></div>`;
 }
 function metroStepsHTML(steps){
   return `<details class="msteps"><summary>▸ 단계별로 보기 (${steps.length}단계)</summary><ol>${steps.map(x => `<li>${x}</li>`).join("")}</ol>
@@ -265,7 +296,7 @@ const SECTION = {
   about: p => typeof p.about === "string" ? `<p>${esc(p.about)}</p>`
     : `<p>${esc(p.about.text)}</p><div class="pc"><div class="pro"><b>좋다는 점</b>${ul(p.about.pros)}</div><div class="con"><b>아쉽다는 점</b>${ul(p.about.cons)}</div></div>`,
   menu: p => p.menu.map(([ko, zh, price, sp, desc]) => `<div class="dish"><div class="dish-h"><b>${esc(ko)}</b>${price ? `<span class="price">${esc(price)}</span>` : ""}</div>
-      <div class="dish-m"><button type="button" class="zh" data-copy="${esc(zh)}">${esc(zh)}</button>${spiceHTML(sp)}</div><p>${esc(desc)}</p></div>`).join(""),
+      <div class="dish-m">${copyBtn(zh, "big")}${spiceHTML(sp)}</div><p>${esc(desc)}</p></div>`).join(""),
   order: p => `<ul class="order">${p.order.items.map(x => `<li>${esc(x)}</li>`).join("")}</ul><div class="total">${esc(p.order.total)}</div>${p.order.note ? `<div class="note">${esc(p.order.note)}</div>` : ""}`,
   story: p => `<div class="stories">${p.story.map(([t, d]) => `<div class="story"><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("")}</div>`,
   src: p => `<ul class="src">${p.src.map(([n, u]) => u ? `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a></li>` : `<li>${esc(n)}</li>`).join("")}${p.img && CREDITS[p.img] ? `<li>사진: ${esc(CREDITS[p.img].artist)} · ${esc(CREDITS[p.img].license)} (Wikimedia Commons)</li>` : ""}</ul>`
@@ -282,13 +313,15 @@ function detailHTML(id){
   const pg = (pid, cls, dir) => pid ? `<button type="button" class="${cls}" data-open="${pid}"><span>${dir}</span>${esc(PLACES[pid].name)}</button>` : "<span></span>";
   return `${hero}<div class="dhead"><div class="crow"><span class="tchip ${p.type}">${TYPE[p.type]}</span>${badge(p.badge)}<span class="time">${esc(day.tab)} · ${esc(p.t)}</span></div>
     <h2>${esc(p.name)}</h2><p class="one">${esc(p.one)}</p>
-    <div class="cn"><button type="button" data-copy="${esc(p.cn)}">${esc(p.cn)}</button><a href="${AMAP(p.cn)}" target="_blank" rel="noopener">${esc(TRIP.map_label)} ↗</a></div></div>
+    <div class="cn">${copyBtn(p.cn, "big")}<a href="${AMAP(p.cn)}" target="_blank" rel="noopener">${esc(TRIP.map_label)} ↗</a></div></div>
     <nav class="toc" aria-label="목차">${toc.map(([k, label], n) => `<button type="button" data-jump="sec-${k}"><b>${n + 1}</b>${label}</button>`).join("")}</nav>
     ${secs}<div class="pager">${pg(prev, "prev", "← 이전")}${pg(next, "next", "다음 →")}</div>`;
 }
 
 /* ───── 라우팅 ───── */
-const TABS = [...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"}];
+const HAS_STORY = typeof STORY !== "undefined" && STORY && STORY.html;
+const TABS = [...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"},
+  ...(HAS_STORY ? [{id:"story", label:STORY.label || "여행 이야기", small:STORY.small || "역사·상식"}] : [])];
 const $ = id => document.getElementById(id);
 let lastDay = "d1";
 
@@ -311,6 +344,11 @@ function render(){
     if ($("metroslot") && typeof METRO !== "undefined") $("metroslot").innerHTML = metroPanelHTML();
     if (pendingJump) { const id = pendingJump; pendingJump = null; requestAnimationFrame(() => $(id)?.scrollIntoView({block:"start"})); }
     if ($("phrases") && typeof PHRASES !== "undefined") $("phrases").innerHTML = PHRASES.map(([ko, zh]) => `<div class="phrase"><span class="zhb">${esc(zh)}</span><span class="ko">${esc(ko)}</span><button type="button" data-copy="${esc(zh)}">복사</button></div>`).join("");
+  } else if (tab === "story" && HAS_STORY) {
+    $("view").innerHTML = STORY.html;
+    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
+    return;
   } else {
     lastDay = tab; $("view").innerHTML = dayHTML(DAYS.find(d => d.id === tab));
   }
@@ -327,14 +365,43 @@ function initialTab(){
 $("tabs").innerHTML = TABS.map(t => `<button type="button" role="tab" data-id="${t.id}">${t.label}<small>${t.small}</small></button>`).join("");
 $("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) location.hash = b.dataset.id; });
 $("backbtn").addEventListener("click", () => { location.hash = lastDay; });
+
+/* 복사: navigator.clipboard → 안 되면 textarea+execCommand (모바일·구형 사전 둘 다) */
+async function copyText(t){
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(t); return true; } } catch (e) {}
+  const ta = document.createElement("textarea");
+  ta.value = t; ta.setAttribute("readonly", ""); ta.setAttribute("aria-hidden", "true");
+  ta.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;font-size:16px";
+  document.body.appendChild(ta);
+  let ok = false;
+  try { ta.focus(); ta.select(); ta.setSelectionRange(0, t.length); ok = document.execCommand("copy"); } catch (e) { ok = false; }
+  document.body.removeChild(ta);
+  return ok;
+}
+function copyDone(el, ok){
+  const lab = el.querySelector(".ccl");
+  el.classList.toggle("copied", ok);
+  if (!ok) {  // 복사가 막힌 브라우저: 이름만 골라 두어 길게 눌러 복사할 수 있게
+    try {
+      const r = document.createRange(); r.selectNodeContents(el.querySelector(".zht") || el);
+      const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    } catch (e) {}
+  }
+  if (lab) { if (!lab.dataset.old) lab.dataset.old = lab.textContent; lab.textContent = ok ? "복사됨" : "길게 눌러 복사"; }
+  else { if (!el.dataset.old) el.dataset.old = el.textContent; el.textContent = ok ? "복사됨 ✓" : "길게 눌러 복사"; }
+  clearTimeout(el._t);
+  el._t = setTimeout(() => {
+    el.classList.remove("copied");
+    if (lab) lab.textContent = lab.dataset.old || "복사";
+    else el.textContent = el.dataset.old || "복사";
+  }, 1600);
+}
 document.addEventListener("click", async e => {
+  const c = e.target.closest("[data-copy]");
+  if (c) { e.preventDefault(); copyDone(c, await copyText(c.dataset.copy)); return; }
   const open = e.target.closest("[data-open]"); if (open) { location.hash = "p-" + open.dataset.open; return; }
   const go = e.target.closest("[data-goto]"); if (go) { pendingJump = go.dataset.goto; if (location.hash === "#common") render(); else location.hash = "common"; return; }
   const jump = e.target.closest("[data-jump]"); if (jump) { $(jump.dataset.jump)?.scrollIntoView({behavior:"smooth", block:"start"}); return; }
-  const c = e.target.closest("[data-copy]"); if (!c) return;
-  try { await navigator.clipboard.writeText(c.dataset.copy); }
-  catch (err) { const r = document.createRange(); r.selectNodeContents(c); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
-  c.classList.add("copied"); setTimeout(() => c.classList.remove("copied"), 1500);
 });
 window.addEventListener("hashchange", render);
 $("coverimg").src = IMG.hero || "";
