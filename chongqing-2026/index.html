@@ -178,6 +178,8 @@ main{padding-block:16px 48px}
 .msteps summary{cursor:pointer;color:var(--river);font-weight:600;font-size:13px;min-height:32px;display:flex;align-items:center}
 .msteps ol{margin:4px 0 6px;padding-left:20px;font-size:13px} .msteps li{margin:4px 0}
 .linkbtn{background:none;border:0;padding:4px 0;color:var(--river);font-weight:600;font-size:13px;cursor:pointer;text-decoration:underline}
+.aclinks{display:flex;flex-wrap:wrap;gap:6px 20px;margin:0}
+.aclinks .linkbtn{min-height:44px;display:inline-flex;align-items:center}
 .stepper{list-style:none;margin:8px 0 0;padding:0;counter-reset:st}
 .stepper li{display:grid;grid-template-columns:40px 1fr;gap:10px;position:relative;padding-bottom:14px}
 .stepper li:not(:last-child)::before{content:"";position:absolute;left:19px;top:40px;bottom:0;border-left:2px dotted var(--muted);opacity:.6}
@@ -793,7 +795,7 @@ const ARRIVAL = {
 <p class="acnote">2025년 11월 20일 시행 이후 기준이에요. 제도가 바뀌면 이 탭 대신 공식 사이트 안내를 먼저 보세요.</p>
 </section>
 
-<p><button type="button" class="linkbtn" data-goto-tab="d1">1일차 일정(입국 동선) 보기 →</button> <button type="button" class="linkbtn" data-goto-tab="common">공통 탭(결제·이동·긴급) →</button></p>`
+<p class="aclinks"><button type="button" class="linkbtn" data-goto-tab="d1">1일차 일정(입국 동선) 보기 →</button><button type="button" class="linkbtn" data-goto-tab="common">공통 탭(결제·이동·긴급) →</button></p>`
 };
 
 const DAYS = [

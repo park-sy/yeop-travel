@@ -546,7 +546,7 @@ const ARRIVAL = {
 <p class="acnote">2025년 11월 20일 시행 이후 기준이에요. 제도가 바뀌면 이 탭 대신 공식 사이트 안내를 먼저 보세요.</p>
 </section>
 
-<p><button type="button" class="linkbtn" data-goto-tab="d1">1일차 일정(입국 동선) 보기 →</button> <button type="button" class="linkbtn" data-goto-tab="common">공통 탭(결제·이동·긴급) →</button></p>`
+<p class="aclinks"><button type="button" class="linkbtn" data-goto-tab="d1">1일차 일정(입국 동선) 보기 →</button><button type="button" class="linkbtn" data-goto-tab="common">공통 탭(결제·이동·긴급) →</button></p>`
 };
 
 const DAYS = [
