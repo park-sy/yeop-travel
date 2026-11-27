@@ -205,6 +205,18 @@ main{padding-block:16px 48px}
 .tl b{font:500 12px/1.6 var(--f-mono);color:var(--river);letter-spacing:-.01em}
 .fact{background:var(--bg);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:9px 12px;font-size:14px;line-height:1.6;margin:10px 0 0}
 .fact b{color:var(--gold)}
+/* 입국카드 탭 — 복사해서 그대로 붙여넣는 칸 */
+.acf{display:grid;gap:4px;padding:9px 0;border-top:1px dashed var(--line)}
+.acf:first-of-type{border-top:0;padding-top:0}
+.acf-l{font:500 10px/1.3 var(--f-mono);letter-spacing:.08em;color:var(--muted)}
+.acf .cc{width:100%;justify-content:space-between;text-align:left}
+.acf .cc .zht{white-space:normal}
+.cc.lat .zht{font-family:var(--f-body);font-weight:500;font-size:13.5px;letter-spacing:0}
+.acgo{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 13px;margin:8px 6px 0 0;border-radius:10px;background:var(--river);color:var(--bg);text-decoration:none;font-weight:700;font-size:14px}
+.acgo.ghost{background:var(--surface);color:var(--river);border:1px solid var(--line)}
+.acnote{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.55}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);z-index:20;max-width:calc(100% - 40px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;line-height:1.3;padding:9px 15px;border-radius:999px;text-align:center;opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease}
+.toast.on{opacity:.94;transform:translate(-50%,0)}
 footer{color:var(--muted);font-size:12px;padding-block:12px 32px;border-top:1px solid var(--line)}
 footer details{margin-top:8px} footer summary{cursor:pointer}
 </style>
@@ -224,6 +236,7 @@ footer details{margin-top:8px} footer summary{cursor:pointer}
 <div class="back" id="backbar" hidden><div class="wrap"><button type="button" id="backbtn">← 목록</button><span id="backtype"></span></div></div>
 
 <main><div class="wrap" id="view"></div></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer><div class="wrap">
   {{footer}}
@@ -320,7 +333,9 @@ function detailHTML(id){
 
 /* ───── 라우팅 ───── */
 const HAS_STORY = typeof STORY !== "undefined" && STORY && STORY.html;
-const TABS = [...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"},
+const HAS_ARRIVAL = typeof ARRIVAL !== "undefined" && ARRIVAL && ARRIVAL.html;
+const TABS = [...(HAS_ARRIVAL ? [{id:"arrival", label:ARRIVAL.label || "입국카드", small:ARRIVAL.small || "출국 전"}] : []),
+  ...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"},
   ...(HAS_STORY ? [{id:"story", label:STORY.label || "여행 이야기", small:STORY.small || "역사·상식"}] : [])];
 const $ = id => document.getElementById(id);
 let lastDay = "d1";
@@ -336,6 +351,13 @@ function render(){
     $("backbtn").textContent = "← " + DAYS.find(d => d.id === p.day).tab + " 목록";
     $("backtype").textContent = TYPE[p.type] + " 상세";
     $("view").innerHTML = detailHTML(place);
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (tab === "arrival" && HAS_ARRIVAL) {
+    $("view").innerHTML = ARRIVAL.html;
+    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     window.scrollTo(0, 0);
     return;
   }
@@ -378,6 +400,12 @@ async function copyText(t){
   document.body.removeChild(ta);
   return ok;
 }
+let toastTimer;
+function toast(msg){
+  const t = $("toast"); if (!t) return;
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("on"), 1500);
+}
 function copyDone(el, ok){
   const lab = el.querySelector(".ccl");
   el.classList.toggle("copied", ok);
@@ -389,6 +417,7 @@ function copyDone(el, ok){
   }
   if (lab) { if (!lab.dataset.old) lab.dataset.old = lab.textContent; lab.textContent = ok ? "복사됨" : "길게 눌러 복사"; }
   else { if (!el.dataset.old) el.dataset.old = el.textContent; el.textContent = ok ? "복사됨 ✓" : "길게 눌러 복사"; }
+  toast(ok ? "복사했어요 ✓" : "복사가 막혔어요. 길게 눌러 복사해 주세요");
   clearTimeout(el._t);
   el._t = setTimeout(() => {
     el.classList.remove("copied");
@@ -401,6 +430,7 @@ document.addEventListener("click", async e => {
   if (c) { e.preventDefault(); copyDone(c, await copyText(c.dataset.copy)); return; }
   const open = e.target.closest("[data-open]"); if (open) { location.hash = "p-" + open.dataset.open; return; }
   const go = e.target.closest("[data-goto]"); if (go) { pendingJump = go.dataset.goto; if (location.hash === "#common") render(); else location.hash = "common"; return; }
+  const goto = e.target.closest("[data-goto-tab]"); if (goto) { location.hash = goto.dataset.gotoTab; return; }
   const jump = e.target.closest("[data-jump]"); if (jump) { $(jump.dataset.jump)?.scrollIntoView({behavior:"smooth", block:"start"}); return; }
 });
 window.addEventListener("hashchange", render);

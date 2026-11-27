@@ -488,6 +488,67 @@ const STORY = {
 </section>`
 };
 
+/* ───── 입국카드 탭 (외국인 입국신고서 · 출국 전 온라인 작성) ─────
+   공개 저장소라 여권번호·전화·이메일·동행자 실명은 넣지 않는다. 항공편명도 시트에 없어 'e티켓 확인' 안내로 둔다. */
+const ARRIVAL = {
+  label: "입국카드",
+  small: "출국 전",
+  html: `<div class="daylead"><h2>입국카드, 출발 전에 온라인으로</h2><p>2025년 11월 20일부터 외국인은 중국에 들어가기 전에 입국 정보를 온라인으로 낼 수 있어요. 무료이고 한국어 화면도 있어요. 셋이 각자 1건씩 내고 QR만 캡처해 가면 입국장에서 카드 쓰는 시간이 사라져요.</p></div>
+
+<section class="panel" id="ac-when"><h3>🕘 언제 · 어디서</h3><ul>
+<li><strong>시기</strong> — 출발 24시간 전 ~ 출발 전. 11/27(금) 저녁에 셋 다 쓰면 딱 맞아요. 공식 마감은 따로 없지만 너무 일찍 내면 항공편·숙소가 바뀌었을 때 다시 내야 해요</li>
+<li><strong>PC</strong> — 아래 사이트. 오른쪽 위 <strong>Language → 한국어</strong>로 바꾸고 <strong>입국 신고</strong>를 눌러요. 그 아래 ‘변경지역 주민 입국 신고’는 국경 주민용이라 우리 대상이 아니에요</li>
+<li><strong>휴대폰</strong> — 위챗·알리페이에서 <strong>移民局12367</strong> 미니프로그램을 검색(아래 복사 버튼)하거나, 휴대폰용 주소로 들어가요</li>
+<li><strong>비용</strong> — 무료. 돈을 받거나 카드 정보를 묻는 사이트는 가짜예요. 주소창이 <strong>s.nia.gov.cn</strong>인지 먼저 확인</li>
+<li><strong>제출하면</strong> — QR이 나와요. 화면을 <strong>캡처해 사진 앱에 저장</strong>(화면의 이미지 저장·메일 보내기 버튼도 돼요). 입국장에서 이 QR을 보여주면 끝</li>
+</ul>
+<a class="acgo" href="https://s.nia.gov.cn/ArrivalCardFillingPC/" target="_blank" rel="noopener">작성 사이트 열기 ↗</a><a class="acgo ghost" href="https://s.nia.gov.cn/ArrivalCardFillingPhone/" target="_blank" rel="noopener">휴대폰용 ↗</a>
+</section>
+
+<section class="panel" id="ac-step"><h3>🧾 화면 순서대로 5단계</h3>
+<ol class="stepper">
+<li><div class="sico" aria-hidden="true">1</div><div><b>여권 정보면 올리기</b><span>여권 종류는 ‘일반여권’. 사진이 있는 면을 안내 그림대로 찍어 올려요. PC로 하면 여권 사진면을 미리 폰으로 찍어 컴퓨터로 옮겨 두면 빨라요</span></div></li>
+<li><div class="sico" aria-hidden="true">2</div><div><b>기본 정보</b><span>영문 성·이름, 여권번호, 생년월일. 여권 사진면과 <b>철자·대문자까지 똑같이</b> 넣어요</span></div></li>
+<li><div class="sico" aria-hidden="true">3</div><div><b>개인 정보</b><span>성별·국적·직업·휴대폰 번호 같은 칸. 국적은 Korea(Republic of Korea), 번호는 +82로 시작하는 내 번호</span></div></li>
+<li><div class="sico" aria-hidden="true">4</div><div><b>여행 정보</b><span>입국일·출국일·도시·숙소는 아래 복사 버튼으로 그대로. 입국 목적은 <b>Tourism / Sightseeing</b>, 항공편명·경유지는 각자 e티켓 보고 직접</span></div></li>
+<li><div class="sico" aria-hidden="true">5</div><div><b>동반자 정보 → 제출</b><span>가족·일행을 <b>한 신고에 함께</b> 넣는 칸이에요. 셋이 각자 1건씩 내면 비워 두고 제출하면 돼요. 각자 내면 QR도 각자 생겨요</span></div></li>
+</ol>
+</section>
+
+<section class="panel" id="ac-copy"><h3>📋 복사해서 붙여넣기 <small style="color:var(--muted);font-weight:400">누르면 복사</small></h3>
+<div class="acf"><span class="acf-l">숙소명 · 中文</span><button type="button" class="cc" data-copy="闲隅高空江景酒店(解放碑洪崖洞店)" aria-label="숙소명 복사"><span class="zht">闲隅高空江景酒店(解放碑洪崖洞店)</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">숙소명 · ENGLISH</span><button type="button" class="cc lat" data-copy="Xianyu High-Altitude Riverview Art Hotel" aria-label="숙소 영문명 복사"><span class="zht">Xianyu High-Altitude Riverview Art Hotel</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">숙소 주소 · 中文</span><button type="button" class="cc" data-copy="重庆市渝中区公园路19号 德艺大厦32楼" aria-label="숙소 주소 복사"><span class="zht">重庆市渝中区公园路19号 德艺大厦32楼</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">숙소 주소 · ENGLISH</span><button type="button" class="cc lat" data-copy="32F, Deyi Building, No.19 Gongyuan Road, Yuzhong District, Chongqing" aria-label="숙소 영문 주소 복사"><span class="zht">32F, Deyi Building, No.19 Gongyuan Road, Yuzhong District, Chongqing</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">입국 도시</span><button type="button" class="cc lat" data-copy="Chongqing" aria-label="도시 복사"><span class="zht">Chongqing</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">입국일</span><button type="button" class="cc lat" data-copy="2026-11-28" aria-label="입국일 복사"><span class="zht">2026-11-28</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">출국일</span><button type="button" class="cc lat" data-copy="2026-12-01" aria-label="출국일 복사"><span class="zht">2026-12-01</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">위챗 · 알리페이 미니프로그램 검색어</span><button type="button" class="cc" data-copy="移民局12367" aria-label="미니프로그램 검색어 복사"><span class="zht">移民局12367</span><span class="ccl">복사</span></button></div>
+<p class="acnote">날짜 칸이 달력이면 골라도 되고, 직접 입력하는 칸이면 2026-11-28 형식으로 넣어요. 항공편명은 시트에 없으니 각자 항공권 e티켓(예약 확인서)을 보고 직접 넣어 주세요 — 직항이면 경유지 비워 두면 돼요.</p>
+</section>
+
+<section class="panel" id="ac-tip"><h3>✍️ 칸마다 요령</h3>
+<ol class="prep">
+<li><b>영문 성명 · 여권번호 · 생년월일</b><span>여권 사진면(영문) 기준 그대로. 이름 띄어쓰기, 대문자, 여권번호의 숫자·영문 순서까지 바꾸지 않기</span></li>
+<li><b>입국 목적</b><span>관광 = Tourism / Sightseeing. 목록에서 이걸 고르고, 비즈니스·환승은 고르지 않아요</span></li>
+<li><b>숙소 주소</b><span>호텔 이름만 말고 건물명·도로명·층까지. 德艺大厦 32층이 우리 프런트예요</span></li>
+<li><b>항공편 · 경유지</b><span>항공권 e티켓에서 편명·출도착 시간을 보고 각자 입력. 모르면 넣지 말고 비워 두는 편이 나아요</span></li>
+<li><b>QR은 3명 3장</b><span>입국장에서 폰 화면 밝기를 올려 보여주기. 스크린샷이면 사진 앱 즐겨찾기에 넣어 두면 바로 찾아요</span></li>
+</ol>
+</section>
+
+<section class="panel"><h3>🖊️ 못 썼을 때 · 현장 대비</h3><ul>
+<li>미리 못 썼어도 입국이 막히지 않아요. 입국장에서 QR을 찍어 쓰거나, 현장 무인기기나 <strong>종이 입국카드</strong>로 쓸 수 있어요</li>
+<li>그래서 가방에 <strong>볼펜 1자루</strong>를 넣어 두세요. 사인펜보다 볼펜이 잘 써요</li>
+<li>줄 앞에서 허둥대지 않게 입국카드 탭의 복사 버튼을 미리 눌러 두고, QR 캡처는 사진 앱 즐겨찾기·알리페이 즐겨찾기에 넣어 두기</li>
+<li>입국할 때는 귀국 항공권과 호텔 바우처(중문 주소)도 같이 물어볼 수 있어요</li>
+</ul>
+<p class="acnote">2025년 11월 20일 시행 이후 기준이에요. 제도가 바뀌면 이 탭 대신 공식 사이트 안내를 먼저 보세요.</p>
+</section>
+
+<p><button type="button" class="linkbtn" data-goto-tab="d1">1일차 일정(입국 동선) 보기 →</button> <button type="button" class="linkbtn" data-goto-tab="common">공통 탭(결제·이동·긴급) →</button></p>`
+};
+
 const DAYS = [
  {id:"d1", tab:"1일차", date:"11/28 토", iso:"2026-11-28", title:"도착, 그리고 첫날 밤의 홍애동",
   sub:"17:00 착륙 → 체크인 → 드론쇼 → 첸쓰먼대교 → 홍애동 → 카오나오화. 시트의 C안 기준이에요.",
@@ -549,13 +610,14 @@ const METRO = {
 
 /* ───── 공통 탭 (어느 일차에도 해당되는 것) ───── */
 const COMMON = `<div class="daylead"><h2>어디서든 통하는 충칭 생존법</h2><p>장소와 상관없이 3박 4일 내내 해당되는 것들이에요.</p></div>
+<p class="callout" style="border-left-color:var(--river)"><strong>출국 전 하나 — 입국카드.</strong> 온라인으로 미리 내면 입국장에서 QR만 보여주면 돼요. 숙소명·주소·날짜 복사용 칸과 5단계 순서를 따로 모아 뒀어요. <button type="button" class="linkbtn" data-goto-tab="arrival">입국카드 가이드 →</button></p>
 <p class="callout"><strong>충칭은 ‘층’이 거짓말을 해요.</strong> 산비탈 도시라 한 건물에 땅과 맞닿은 층이 여러 개예요. 홍애동 11층, 괴성루 22층이 지면이고, 지도 직선거리 300m가 실제로는 계단 15층일 수 있어요. 도보 10분 넘으면 디디가 원칙.</p>
 <section class="panel"><h3>결제</h3><ul><li>알리페이가 주력, 위챗페이가 백업. 서로 다른 카드를 등록</li><li><strong>200위안 룰</strong>: 1건 200元 이하는 수수료 0, 초과하면 <em>결제액 전체</em>에 3%. 큰 식사는 나눠서 결제</li><li>현금은 1인 200~300元, 10·20·50元 소액권</li><li>팁 문화 없음. 식당 물·물티슈는 유료(2~5元)인 곳이 많아요</li><li>테이블 QR 주문 식당이 많아요 → 위챗 로그인 필요</li></ul></section>
 <section class="panel"><h3>이동</h3><ul><li>디디: 알리페이·위챗 안의 ‘滴滴出行’. 장소 카드의 중국어 이름을 눌러 복사한 뒤 목적지에 붙여넣기</li><li>출발지 핀을 꼭 직접 확인. 같은 건물이라도 층마다 출입구 도로가 달라요</li><li>지하철은 아래 ‘지하철 타는 법’ 참고</li><li>오토바이·전동스쿠터가 인도로도 다녀요</li></ul></section>
 <div id="metroslot"></div>
 <section class="panel"><h3>먹을 때</h3><ul><li>맵기: 不辣(안 맵게) &lt; 微辣(조금) &lt; 中辣 &lt; 特辣. 微辣도 한국 기준 ‘꽤 매움’</li><li>화자오(산초)의 얼얼함은 매운맛과 따로 와요</li><li>훠궈 소스는 참기름 + 다진 마늘(油碟)이 충칭식</li><li>지사제·소화제는 각자 가방에</li></ul></section>
 <section class="panel"><h3>말 한마디 <small style="color:var(--muted);font-weight:400">누르면 복사</small></h3><div id="phrases"></div></section>
-<section class="panel"><h3>앱 체크 (출국 전)</h3><ul><li>알리페이·위챗페이 실명인증 + 카드 등록, 소액 결제 테스트</li><li>대중점평(大众点评): 원격 줄서기 排队/取号 → 3명(中桌)</li><li>고덕지도 오프라인 ‘충칭’ 지도</li><li>번역기 중국어 오프라인 팩</li><li>eSIM/로밍: 호텔 Wi-Fi는 막혀 있다고 생각하기</li><li>바우처 QR은 오프라인 저장 + 스크린샷 + PDF (충칭 1949·래플스시티 둘 다)</li></ul></section>
+<section class="panel"><h3>앱 체크 (출국 전)</h3><ul><li>입국카드: 온라인 제출 → QR 캡처 (입국카드 탭)</li><li>알리페이·위챗페이 실명인증 + 카드 등록, 소액 결제 테스트</li><li>대중점평(大众点评): 원격 줄서기 排队/取号 → 3명(中桌)</li><li>고덕지도 오프라인 ‘충칭’ 지도</li><li>번역기 중국어 오프라인 팩</li><li>eSIM/로밍: 호텔 Wi-Fi는 막혀 있다고 생각하기</li><li>바우처 QR은 오프라인 저장 + 스크린샷 + PDF (충칭 1949·래플스시티 둘 다)</li></ul></section>
 <section class="panel"><h3>날씨·옷</h3><ul><li>11/28~30 맑음·구름 13~21°C, 12/01 흐림·이슬비 15~19°C (11/22 조회)</li><li>니트 + 얇은 자켓. 밤 강변·산꼭대기는 바람이 차요</li><li>쿠션 좋은 <strong>기존</strong> 운동화</li><li>공중화장실엔 휴지가 없는 경우가 많아요</li></ul></section>
 <section class="panel"><h3>긴급</h3><ul><li>경찰 110 · 구급 120 · 소방 119</li><li>영사콜센터(24시간) +82-2-3210-0404</li><li>여권 분실: 공안(110) 신고 → 영사관 여행증명서 → 출국</li><li>호텔 주소: 重庆市渝中区公园路19号 德艺大厦32楼</li></ul></section>`;
 
