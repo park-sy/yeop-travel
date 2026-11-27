@@ -17,7 +17,7 @@ engine/          모든 여행이 같이 쓰는 틀
 trips/<slug>/    여행 하나의 원본
   trip.json      제목·표지 문구·시간대·지도 검색 주소
   data.js        PLACES · DAYS · COMMON(공통 탭) · PHRASES · METRO(선택) · STORY(선택, 이야기 탭) · ARRIVAL(선택, 입국카드 탭) · SHOPPING(선택, 기념품 탭) · CAFES(선택, 카페·가게 탭)
-  img/*.jpg      사진 (Wikimedia Commons, 720px)
+  img/*.jpg      사진 (Wikimedia Commons, 640~720px · 빌드 때 base64 로 들어감)
   credits.json   사진 저작자·라이선스
 <slug>/index.html  빌드 결과 — Pages 가 이걸 보여준다
 tools/           Commons 사진 검색(commons.py)·내려받기(fetchimg.py)
