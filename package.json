@@ -1,0 +1,14 @@
+{
+  "name": "yeop-travel",
+  "private": true,
+  "description": "모바일 여행 가이드 — 도구용 개발 의존성만 (빌드 결과는 의존성 없음)",
+  "scripts": {
+    "check": "node engine/check.js",
+    "pron": "node tools/pron.js",
+    "test": "node tools/test_shopping.js && node tools/test_pron.js"
+  },
+  "devDependencies": {
+    "jsdom": "24.1.3",
+    "pinyin-pro": "3.26.0"
+  }
+}

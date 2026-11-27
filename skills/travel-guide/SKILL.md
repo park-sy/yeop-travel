@@ -53,7 +53,10 @@ description: 여행 일정(구글 시트 등)을 받아 폰에서 보는 일정�
 
 ### 5. 검사 → 빌드 → 눈으로 확인
 ```bash
+npm install                                      # 처음 한 번
+node tools/pron.js trips/<slug>                  # 중국어 한글 발음 표 (현지어가 중국어일 때)
 node engine/check.js trips/<slug>/data.js        # "문제 0"
+npm test                                         # 화면 테스트 (충칭 기준)
 python3 -I engine/build.py trips/<slug>          # → <slug>/index.html
 ```
 - 헤드리스 크롬으로 폰 폭 스크린샷: 일차 목록 1개, 명소 상세 1개, 가게 상세 1개, 공통 탭. (크롬 최소 창 폭 때문에 오른쪽이 잘려 보이는 건 버그 아님)

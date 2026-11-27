@@ -19,8 +19,9 @@ trips/<slug>/    여행 하나의 원본
   data.js        PLACES · DAYS · COMMON(공통 탭) · PHRASES · METRO(선택) · STORY(선택, 이야기 탭) · ARRIVAL(선택, 입국카드 탭) · SHOPPING(선택, 기념품 탭) · CAFES(선택, 카페·가게 탭)
   img/*.jpg      사진 (Wikimedia Commons, 640~720px · 빌드 때 base64 로 들어감)
   credits.json   사진 저작자·라이선스
+  pron.json      중국어 한글 발음 표 (tools/pron.js 가 만듦)
 <slug>/index.html  빌드 결과 — Pages 가 이걸 보여준다
-tools/           Commons 사진 검색(commons.py)·내려받기(fetchimg.py)
+tools/           Commons 사진 검색(commons.py)·내려받기(fetchimg.py)·발음 표(pron.js)·화면 테스트(test_*.js, npm test)
 skills/          새 여행 가이드를 만드는 절차 (Claude Code 스킬)
 ```
 
@@ -28,6 +29,8 @@ skills/          새 여행 가이드를 만드는 절차 (Claude Code 스킬)
 
 ```bash
 # trips/<slug>/data.js 수정 후
+npm install                                   # 처음 한 번 (발음 표·테스트 도구)
+node tools/pron.js trips/<slug>               # 중국어가 바뀌었으면 발음 표 다시
 node engine/check.js trips/<slug>/data.js     # "문제 0" 이어야 함
 python3 -I engine/build.py trips/<slug>
 git add -A && git commit -m "fix: ..." && git push   # 1분쯤 뒤 링크에 반영
@@ -62,3 +65,7 @@ git add -A && git commit -m "fix: ..." && git push   # 1분쯤 뒤 링크에 반
 - 일정·가격·예약 상태는 시트가 기준. 가이드는 시트를 옮겨 적고, 설명·메뉴·팁만 더한다.
 - 사진은 라이선스가 있는 것만 (Commons), 출처를 페이지 아래에 남긴다.
 - 카페·가게 카드의 사진 캡션은 사실대로. 매장 사진이 아닌 것을 매장 사진처럼 적지 않는다.
+
+## 중국어 발음·듣기
+
+중국어 복사 버튼과 공통 탭 문장 아래에 **한글 발음**이 붙고, 옆 🔊 버튼을 누르면 기기 음성(Web Speech, `zh-CN`)으로 읽어 준다. 본문에서 `‘中文’` 처럼 따옴표로 시작하는 중국어도 누르면 읽고, 뒤에 한글 발음이 붙는다(괄호에 같은 발음이 이미 있으면 생략). 발음은 빌드 때 `pron.json` 에서 가져오므로 페이지에 사전이 실리지 않는다. `data.js` 에 새 한자가 생기면 `build.py` 가 `node tools/pron.js trips/<slug>` 를 다시 돌리라고 멈춘다. 한글 표기는 외래어 표기법이 아니라 따라 읽기 쉬운 쪽(解放碑 → 지에 팡 베이)이고, 굳어진 읽기는 `tools/pron.js` 의 `SPECIAL` 에 둔다.

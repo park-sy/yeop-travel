@@ -124,6 +124,17 @@ main{padding-block:16px 48px}
 .cn{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .cn a{font-size:13px;font-weight:500;color:var(--river);text-decoration:none;min-height:40px;display:inline-flex;align-items:center;padding:0 4px}
 .cc.copied .ccl::before{content:"✓"}
+/* 한글 발음 + 듣기 버튼 (annotateZh 가 붙임) */
+.cc .zh{display:block}
+.cc .yin{display:block;font:500 11px/1.3 var(--f-body);opacity:.78;margin-top:2px;word-break:keep-all}
+.cc.copied .yin{opacity:1}
+.say{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--river);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.say svg{width:18px;height:18px;display:block}
+.say.on{background:var(--river);border-color:var(--river);color:var(--bg)}
+.zhq{font:inherit;color:var(--river);background:none;border:0;border-bottom:1px dotted currentColor;padding:0;margin:0;cursor:pointer;text-align:inherit;-webkit-tap-highlight-color:transparent}
+.zhq svg{width:.95em;height:.95em;vertical-align:-.1em;margin-left:2px}
+.zhq.on{background:var(--river-soft)}
+.yinq{font-size:.86em;color:var(--muted);margin:0 2px 0 3px;word-break:keep-all}
 .toc{display:flex;gap:6px;overflow-x:auto;padding-block:12px;scrollbar-width:none}
 .toc::-webkit-scrollbar{display:none}
 .toc button{flex:0 0 auto;font-size:12px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 10px;cursor:pointer;min-height:34px}
@@ -172,6 +183,9 @@ main{padding-block:16px 48px}
 .phrase:first-child{border-top:0;margin-top:0;padding-top:0}
 .phrase .zhb{font-family:var(--f-display);font-size:20px;font-weight:600}
 .phrase .ko{font-size:13px;color:var(--muted)}
+.phrase .pt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.phrase .yin{font-size:13px;font-weight:600;color:var(--river)}
+.phrase .pb{display:flex;gap:6px;align-items:center}
 .phrase button{grid-row:1/3;grid-column:2;font-weight:600;font-size:13px;color:var(--river);background:var(--river-soft);border:0;border-radius:8px;padding:8px 10px;min-height:40px;cursor:pointer}
 .msteps{margin-top:6px}
 .msteps summary{cursor:pointer;color:var(--river);font-weight:600;font-size:13px;min-height:32px;display:flex;align-items:center}
@@ -306,6 +320,7 @@ footer details{margin-top:8px} footer summary{cursor:pointer}
 const TRIP = /*TRIP*/;
 const IMG = /*IMAGES*/;
 const CREDITS = /*CREDITS*/;
+const PRON = /*PRON*/;
 </script>
 <script>
 const SPOT_TOC = [["glance","한눈에"],["about","어떤 곳인가"],["story","가이드 이야기"],["see","꼭 볼 것·할 것"],["photo","사진 스팟"],["route","가는 법·동선"],["entry","입장·예약"],["warn","주의할 점"],["planb","플랜 B"],["src","출처"]];
@@ -314,6 +329,76 @@ const TYPE = {spot:"명소", shop:"가게"};
 const BADGE = {ok:["확정","b-ok"],pay:["예매 필요","b-pay"],open:["오픈 대기","b-pay"],wait:["현장 웨이팅","b-wait"],line:["원격 줄서기","b-wait"],free:["무료","b-walk"],opt:["선택","b-walk"],cand:["후보","b-walk"],local:["현지 섭외","b-wait"]};
 const MOVE = {walk:["🚶","도보"],didi:["🚕","디디"],metro:["🚇","지하철"],mall:["🏬","몰 안 이동"],cable:["🚡","케이블카"]};
 const AMAP = q => TRIP.map_search + encodeURIComponent(q);
+
+/* ───── 중국어 발음(한글) · 듣기 ───── */
+const HAN = /[\u3400-\u9fff]+/g;
+const HAS_HAN = /[\u3400-\u9fff]/;
+const HANGUL = /[가-힣]/;
+/* 한자 덩어리는 PRON 표의 한글로, 괄호는 남기고 나머지 기호는 뺀다. 한자가 없으면 "" */
+const yin = s => !HAS_HAN.test(s) ? "" : String(s)
+  .replace(HAN, m => " " + (PRON[m] ? PRON[m].h : "") + " ")
+  .replace(/[（]/g, "(").replace(/[）]/g, ")")
+  .replace(/[^가-힣0-9A-Za-z() ]/g, " ")
+  .replace(/\(\s*/g, "(").replace(/\s*\)/g, ")").replace(/\(\)/g, "")
+  .replace(/\s+/g, " ").trim();
+const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+const sayBtn = zh => `<button type="button" class="say" data-say="${esc(zh)}" aria-label="중국어로 듣기">${SPK}</button>`;
+/* 따옴표 안 설명 괄호(한글) 는 읽지 않는다: ‘微辣(웨이라)’ → 微辣 */
+const sayText = s => s.replace(/[(（][^)）]*[가-힣][^)）]*[)）]/g, "").trim();
+const squash = s => s.replace(/[\s()（）]/g, "");
+
+/* 렌더가 끝난 화면에 발음·듣기 버튼을 붙인다
+   ① 복사 버튼(.cc) 의 중국어 아래 한글 발음 + 옆에 듣기 버튼
+   ② 본문 ‘中文’ 따옴표 → 누르면 읽어 주고, 뒤에 한글 발음 (이미 괄호로 발음이 적혀 있으면 생략) */
+function annotateZh(root){
+  if (!root) return;
+  root.querySelectorAll(".cc[data-copy]").forEach(b => {
+    const zh = b.dataset.copy; const t = b.querySelector(".zht");
+    if (!t || !HAS_HAN.test(zh) || t.querySelector(".yin")) return;
+    const r = yin(zh);
+    t.innerHTML = `<span class="zh">${esc(t.textContent)}</span>` + (r ? `<span class="yin">${esc(r)}</span>` : "");
+    if (!(b.nextElementSibling && b.nextElementSibling.classList.contains("say"))) b.insertAdjacentHTML("afterend", sayBtn(zh));
+  });
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode: n =>
+    n.parentElement.closest(".cc,.phrase,button,a,script,style,textarea,.zhq,.yinq") ? NodeFilter.FILTER_REJECT
+      : /‘[\u3400-\u9fff][^’]*’/.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP});
+  const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => {
+    const html = esc(n.nodeValue).replace(/‘([\u3400-\u9fff][^’]*)’/g, (all, inner) => {
+      const raw = inner.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"');
+      const zh = sayText(raw); const r = yin(zh);
+      const paren = (raw.match(/[(（]([^)）]*[가-힣][^)）]*)[)）]/) || [])[1];
+      const show = r && !(paren && squash(paren) === squash(r));
+      return `‘<button type="button" class="zhq" data-say="${esc(zh)}" aria-label="${esc(zh)} 듣기">${inner}${SPK}</button>’` + (show ? `<span class="yinq">${esc(r)}</span>` : "");
+    });
+    const span = document.createElement("span"); span.innerHTML = html;
+    n.replaceWith(...span.childNodes);
+  });
+}
+
+/* 듣기: 브라우저 내장 음성(Web Speech). 소리 파일 없음 → 오프라인에서도 기기 음성으로 */
+let zhVoice = null, sayHinted = false;
+function pickVoice(){
+  const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  zhVoice = vs.find(v => /^zh[-_]CN/i.test(v.lang)) || vs.find(v => /^zh/i.test(v.lang) && !/HK|TW|yue/i.test(v.lang)) || vs.find(v => /^(zh|cmn)/i.test(v.lang)) || null;
+}
+if (window.speechSynthesis) { pickVoice(); try { speechSynthesis.addEventListener("voiceschanged", pickVoice); } catch (e) { speechSynthesis.onvoiceschanged = pickVoice; } }
+function say(text, el){
+  if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === "undefined") { toast("이 앱에선 소리가 안 나와요. 사파리·크롬으로 열어 주세요"); return; }
+  const was = el.classList.contains("on");
+  speechSynthesis.cancel();
+  document.querySelectorAll(".say.on,.zhq.on").forEach(x => x.classList.remove("on"));
+  if (was) return;  // 읽는 중에 다시 누르면 멈춤
+  if (!zhVoice) pickVoice();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-CN"; u.rate = 0.8; if (zhVoice) u.voice = zhVoice;
+  u.onend = u.onerror = () => el.classList.remove("on");
+  el.classList.add("on");
+  speechSynthesis.speak(u);
+  const vs = speechSynthesis.getVoices();
+  if (vs.length && !zhVoice) toast("중국어 음성이 없어요. 설정 › 손쉬운 사용 › 읽기 및 말하기 › 음성에서 중국어 추가");
+  else if (!sayHinted) { sayHinted = true; toast("소리가 안 나면 무음 모드를 꺼 주세요"); }
+}
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const ul = a => "<ul>" + a.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>";
@@ -493,7 +578,8 @@ function selectTab(tab){
   if (a && a.scrollIntoView) { try { a.scrollIntoView({inline:"center", block:"nearest"}); } catch (e) {} }
 }
 let pendingJump = null;
-function render(){
+function render(){ renderView(); annotateZh($("view")); }
+function renderView(){
   const h = location.hash.slice(1);
   const place = h.startsWith("p-") && PLACES[h.slice(2)] ? h.slice(2) : null;
   const tab = place ? null : (TABS.some(t => t.id === h) ? h : initialTab());
@@ -533,7 +619,7 @@ function render(){
     $("view").innerHTML = COMMON;
     if ($("metroslot") && typeof METRO !== "undefined") $("metroslot").innerHTML = metroPanelHTML();
     if (pendingJump) { const id = pendingJump; pendingJump = null; requestAnimationFrame(() => $(id)?.scrollIntoView({block:"start"})); }
-    if ($("phrases") && typeof PHRASES !== "undefined") $("phrases").innerHTML = PHRASES.map(([ko, zh]) => `<div class="phrase"><span class="zhb">${esc(zh)}</span><span class="ko">${esc(ko)}</span><button type="button" data-copy="${esc(zh)}">복사</button></div>`).join("");
+    if ($("phrases") && typeof PHRASES !== "undefined") $("phrases").innerHTML = PHRASES.map(([ko, zh]) => `<div class="phrase"><div class="pt"><span class="zhb">${esc(zh)}</span><span class="yin">${esc(yin(zh))}</span><span class="ko">${esc(ko)}</span></div><div class="pb">${sayBtn(zh)}<button type="button" data-copy="${esc(zh)}">복사</button></div></div>`).join("");
   } else if (tab === "story" && HAS_STORY) {
     $("view").innerHTML = STORY.html;
     selectTab(tab);
@@ -579,7 +665,7 @@ function copyDone(el, ok){
   el.classList.toggle("copied", ok);
   if (!ok) {  // 복사가 막힌 브라우저: 이름만 골라 두어 길게 눌러 복사할 수 있게
     try {
-      const r = document.createRange(); r.selectNodeContents(el.querySelector(".zht") || el);
+      const r = document.createRange(); r.selectNodeContents(el.querySelector(".zh") || el.querySelector(".zht") || el);
       const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
     } catch (e) {}
   }
@@ -597,6 +683,7 @@ document.addEventListener("click", async e => {
   const af = e.target.closest("[data-af]"); if (af) { cafeArea = af.dataset.af; applyCafeFilter(); return; }
   const tf = e.target.closest("[data-tf]"); if (tf) { cafeTag = tf.dataset.tf; applyCafeFilter(); return; }
   const filt = e.target.closest("[data-filter]"); if (filt) { giftTag = filt.dataset.filter; applyGiftFilter(); return; }
+  const sy = e.target.closest("[data-say]"); if (sy) { e.preventDefault(); say(sy.dataset.say, sy); return; }
   const c = e.target.closest("[data-copy]");
   if (c) { e.preventDefault(); copyDone(c, await copyText(c.dataset.copy)); return; }
   const open = e.target.closest("[data-open]"); if (open) { location.hash = "p-" + open.dataset.open; return; }

@@ -2,7 +2,7 @@
    node tools/test_shopping.js  — 빌드된 chongqing-2026/index.html 을 읽어 확인한다. */
 const fs = require("fs");
 const path = require("path");
-const {JSDOM, VirtualConsole} = require("/workspace/tmp/node_modules/jsdom");
+const {JSDOM, VirtualConsole} = require("jsdom")  // 저장소 루트에서 npm install;
 
 const file = path.join(__dirname, "..", "chongqing-2026", "index.html");
 const html = fs.readFileSync(file, "utf8");
