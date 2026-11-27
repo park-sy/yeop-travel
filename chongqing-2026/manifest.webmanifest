@@ -1,0 +1,16 @@
+{
+ "name": "충칭 3박 4일 가이드",
+ "short_name": "충칭 가이드",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#111615",
+ "theme_color": "#111615",
+ "icons": [
+  {
+   "src": "icon.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  }
+ ]
+}

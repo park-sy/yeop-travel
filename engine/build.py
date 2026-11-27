@@ -7,6 +7,9 @@
 중국어가 있으면 pron.json(한글 발음 표)도 — node tools/pron.js trips/<slug> 로 만든다
 """
 import base64
+import hashlib
+import shutil
+import subprocess
 import html
 import json
 import re
@@ -59,6 +62,8 @@ def build(trip_dir: Path, out_path: Path) -> None:
         if marker not in template:
             sys.exit(f"template 에 {marker} 자리가 없어요")
     page = template
+    short = trip.get("short_name") or trip["title"][:12]
+    page = page.replace("{{short_name}}", html.escape(short))
     for key in TRIP_KEYS:
         page = page.replace("{{" + key + "}}", html.escape(trip[key]))
     page = (page.replace("<head>", "<head>\n" + NOINDEX, 1)
@@ -71,7 +76,32 @@ def build(trip_dir: Path, out_path: Path) -> None:
         sys.exit("채워지지 않은 {{자리}} 가 남았어요")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(page, encoding="utf-8")
+    write_offline(trip, short, page, trip_dir, out_path.parent)
     print(f"{out_path}: {len(page) / 1024:.0f}KB, 사진 {len(images)}장")
+
+
+def write_offline(trip: dict, short: str, page: str, trip_dir: Path, out_dir: Path) -> None:
+    """홈 화면 앱 + 오프라인: sw.js · manifest.webmanifest · icon.png 를 index.html 옆에 둔다."""
+    version = hashlib.sha256(page.encode()).hexdigest()[:12]
+    sw = (ENGINE / "sw.js").read_text(encoding="utf-8")
+    (out_dir / "sw.js").write_text(sw.replace("{{version}}", version).replace("{{slug}}", trip["slug"]), encoding="utf-8")
+    manifest = {"name": trip["title"], "short_name": short, "start_url": "./", "scope": "./", "display": "standalone",
+                "background_color": "#111615", "theme_color": "#111615",
+                "icons": [{"src": "icon.png", "sizes": "180x180", "type": "image/png"}]}
+    (out_dir / "manifest.webmanifest").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
+    hero = trip_dir / "img" / "hero.jpg"
+    icon = out_dir / "icon.png"
+    if not hero.exists():
+        sys.exit("img/hero.jpg 가 없어 홈 화면 아이콘을 못 만들어요")
+    if not icon.exists() or icon.stat().st_mtime < hero.stat().st_mtime:
+        if not shutil.which("sips"):
+            sys.exit("아이콘을 만들 sips(macOS) 가 없어요. icon.png(180x180) 를 직접 넣어 주세요")
+        tmp = out_dir / "icon.tmp.png"
+        info = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(hero)], check=True, capture_output=True, text=True).stdout
+        side = str(min(int(line.split(":")[1]) for line in info.splitlines() if "pixel" in line))  # 가운데 정사각형
+        subprocess.run(["sips", "-s", "format", "png", "-c", side, side, str(hero), "--out", str(tmp)], check=True, capture_output=True)
+        subprocess.run(["sips", "-Z", "180", str(tmp), "--out", str(icon)], check=True, capture_output=True)
+        tmp.unlink()
 
 
 if __name__ == "__main__":

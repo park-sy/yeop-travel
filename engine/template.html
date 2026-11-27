@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#eef1f0">
 <title>{{title}}</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="{{short_name}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -288,6 +294,8 @@ main{padding-block:16px 48px}
 .gtag.snack{background:var(--chili-soft);color:var(--chili)}
 .gtag.shop{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);z-index:20;max-width:calc(100% - 40px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;line-height:1.3;padding:9px 15px;border-radius:999px;text-align:center;opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease}
+.offline{font-size:12px;color:var(--muted);margin:8px 0 0}
+.offline b{color:var(--river)}
 .toast.on{opacity:.94;transform:translate(-50%,0)}
 footer{color:var(--muted);font-size:12px;padding-block:12px 32px;border-top:1px solid var(--line)}
 footer details{margin-top:8px} footer summary{cursor:pointer}
@@ -312,6 +320,7 @@ footer details{margin-top:8px} footer summary{cursor:pointer}
 
 <footer><div class="wrap">
   {{footer}}
+  <p class="offline" id="offline"></p>
   <details><summary>사진 출처 (Wikimedia Commons)</summary><ul id="credits"></ul></details>
 </div></footer>
 
@@ -695,6 +704,21 @@ window.addEventListener("hashchange", render);
 $("coverimg").src = IMG.hero || "";
 $("credits").innerHTML = Object.entries(CREDITS).map(([k, c]) => `<li><a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.title.replace("File:", ""))}</a> · ${esc(c.artist)} · ${esc(c.license)}</li>`).join("");
 render();
+
+/* 오프라인: 서비스 워커가 페이지를 저장해 둔다 (https 에서만). 홈 화면 앱이면 비행기 모드에서도 열린다 */
+(function offline(){
+  const el = $("offline"); if (!el) return;
+  const standalone = window.navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) {
+    el.textContent = "오프라인 저장은 아이폰 사파리에서 돼요: 링크를 사파리로 열고 공유 › 홈 화면에 추가.";
+    return;
+  }
+  navigator.serviceWorker.register("sw.js").then(() => navigator.serviceWorker.ready).then(() => {
+    el.innerHTML = standalone
+      ? "<b>✓ 오프라인 저장됨</b> · 인터넷이 될 때 열면 다음부터 새 버전으로 바뀌어요."
+      : "<b>✓ 오프라인 저장됨</b> · 비행기 모드에서도 쓰려면 사파리 공유 › <b>홈 화면에 추가</b> 후 그 아이콘으로 여세요.";
+  }).catch(() => { el.textContent = "오프라인 저장에 실패했어요. 인터넷이 될 때 다시 열어 주세요."; });
+})();
 </script>
 </body>
 </html>
