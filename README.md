@@ -16,7 +16,7 @@ engine/          모든 여행이 같이 쓰는 틀
   check.js       빈 목차·없는 장소·일정에 안 쓰인 장소 검사
 trips/<slug>/    여행 하나의 원본
   trip.json      제목·표지 문구·시간대·지도 검색 주소
-  data.js        PLACES · DAYS · COMMON(공통 탭) · PHRASES · METRO(선택) · STORY(선택, 이야기 탭) · ARRIVAL(선택, 입국카드 탭) · SHOPPING(선택, 기념품 탭)
+  data.js        PLACES · DAYS · COMMON(공통 탭) · PHRASES · METRO(선택) · STORY(선택, 이야기 탭) · ARRIVAL(선택, 입국카드 탭) · SHOPPING(선택, 기념품 탭) · CAFES(선택, 카페·가게 탭)
   img/*.jpg      사진 (Wikimedia Commons, 720px)
   credits.json   사진 저작자·라이선스
 <slug>/index.html  빌드 결과 — Pages 가 이걸 보여준다
@@ -50,8 +50,15 @@ git add -A && git commit -m "fix: ..." && git push   # 1분쯤 뒤 링크에 반
 
 `data.js` 에 `SHOPPING = {label, small, title, lead, warn, filters, tags, gifts, stores, tips, carry, src}` 을 두면 공통 탭 뒤에 한 탭이 늘어난다. `gifts[]` 는 `{name, cn, price, krw, tags, why, where, note, warn}` 이고 `tags` 값은 `tags` 객체의 키(`work`/`friend`/`family`)를 쓴다. 화면 위 필터 버튼이 `tags` 로 카드를 거르고, 카드의 `cn` 은 다른 곳과 같은 복사 버튼으로 떨어진다. `stores[]` 는 `{name, cn, kind, addr, why, best, goto}` — `cn` 으로 고덕지도 검색 링크가 붙고, `goto` 에 장소 id 를 넣으면 그 장소 상세로 가는 버튼도 붙는다. `check.js` 가 빈 칸·모르는 태그를 잡는다.
 
+## 카페·가게 탭 (선택)
+
+`data.js` 에 `CAFES = {label, small, title, lead, note, countNote, areas, tags, filters, shops}` 을 두면 기념품 탭 뒤에 한 탭이 늘어난다. `shops[]` 는 `{id, name, cn, area, tags, badge, price, krw, hours, where, one, menu[[이름,가격]], tip, photos[[이미지키,캡션]], src[[이름,url]]}` 이고, `area` 는 `areas` 의 키, `tags` 값은 `tags` 객체의 키(`cafe`/`dessert`/`snack`/`shop`)를 쓴다. 화면 위에 **구역**과 **성격** 두 줄 필터가 있고, 카드의 사진은 가로로 넘겨 본다(캡션은 사진마다). `badge` 는 `ok`(영업 확인)·`wait`(웨이팅)·`cand`(현장 확인)만 쓴다. `check.js` 가 빈 칸·모르는 구역/태그·사진 2장 미만·빈 캡션을 잡는다.
+
+사진은 매장 실사를 구할 수 없을 때 같은 거리·골목과 대표 메뉴 사진으로 대신하고, **캡션에 무엇을 찍은 사진인지 그대로 적는다**(예: “대표 메뉴 — 마화(메뉴 자료 사진)”). 매장 실제 사진은 카드의 고덕지도 검색 링크로 넘긴다.
+
 ## 지키는 것
 
 - **공개 저장소다.** 이름·연락처·계정 ID·일정 시트 원본 링크를 넣지 않는다 (`build.py` 가 시트 링크를 막는다). 모든 페이지는 `noindex`.
 - 일정·가격·예약 상태는 시트가 기준. 가이드는 시트를 옮겨 적고, 설명·메뉴·팁만 더한다.
 - 사진은 라이선스가 있는 것만 (Commons), 출처를 페이지 아래에 남긴다.
+- 카페·가게 카드의 사진 캡션은 사실대로. 매장 사진이 아닌 것을 매장 사진처럼 적지 않는다.

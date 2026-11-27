@@ -241,6 +241,38 @@ main{padding-block:16px 48px}
 .store .sk{font-size:11px;font-weight:700;color:var(--gold);background:var(--gold-soft);border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:2px;white-space:nowrap}
 .store .addr{font-size:12.5px;color:var(--muted);margin:3px 0 4px;line-height:1.55}
 .store p{margin:5px 0 0;font-size:13.5px;line-height:1.58}
+/* 카페·가게 탭 — 구역·성격 두 줄 필터 + 사진 가로 스크롤 카드 */
+.ccard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px 12px;margin-bottom:12px;scroll-margin-top:64px}
+.cg{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -4px 8px;padding:2px 4px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cg::-webkit-scrollbar{display:none}
+.cg figure{flex:0 0 82%;margin:0;scroll-snap-align:start;min-width:0}
+.cg img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:var(--gold-soft)}
+.cg figcaption{font-size:11px;line-height:1.35;color:var(--muted);padding:4px 2px 0}
+.cg .swipe{flex:0 0 auto;align-self:center;font:500 10px/1.3 var(--f-mono);color:var(--muted);padding:0 2px 18px;white-space:nowrap}
+.chead{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:2px}
+.carea{font-size:11px;font-weight:700;color:var(--river);background:var(--river-soft);border-radius:6px;padding:2px 7px}
+.ccard h4{margin:3px 0 4px;font-size:17px;line-height:1.35}
+.ccard .one{margin:5px 0 0;font-size:13.5px;color:var(--muted);line-height:1.5}
+.ccard .cn{margin-top:7px}
+.ckv{display:grid;grid-template-columns:44px 1fr;gap:4px 8px;font-size:13px;line-height:1.5;margin:9px 0 0}
+.ckv dt{color:var(--muted);font-weight:500}
+.ckv dd{margin:0;min-width:0}
+.ckv dd span{color:var(--muted)}
+.cmenu{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0 0}
+.cmenu span{font-size:12px;line-height:1.3;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+.cmenu b{font:500 11px var(--f-mono);color:var(--gold);margin-left:2px}
+.ctip{margin:10px 0 0;font-size:13px;line-height:1.55;background:var(--gold-soft);border-radius:10px;padding:8px 10px}
+.ctip b{display:block;font-size:10px;letter-spacing:.08em;color:var(--gold);margin-bottom:2px}
+.clinks{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px}
+.clinks a{font-size:13px;font-weight:600;color:var(--river);text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
+.csrc{margin-top:2px;font-size:12px;color:var(--muted)}
+.csrc summary{cursor:pointer;min-height:32px;display:flex;align-items:center}
+.csrc ul{margin:2px 0 0;padding-left:16px}
+.csrc a{color:var(--river)}
+.gtag.cafe{background:var(--river-soft);color:var(--river)}
+.gtag.dessert{background:var(--gold-soft);color:var(--gold)}
+.gtag.snack{background:var(--chili-soft);color:var(--chili)}
+.gtag.shop{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);z-index:20;max-width:calc(100% - 40px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;line-height:1.3;padding:9px 15px;border-radius:999px;text-align:center;opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease}
 .toast.on{opacity:.94;transform:translate(-50%,0)}
 footer{color:var(--muted);font-size:12px;padding-block:12px 32px;border-top:1px solid var(--line)}
@@ -385,6 +417,49 @@ function applyGiftFilter(){
   const c = $("giftcount"); if (c) c.textContent = `${giftTag === "all" ? "전체" : (TAGS[giftTag] || giftTag)} ${n}개`;
 }
 
+/* ───── 카페·가게 탭 (구역 + 성격 두 줄 필터) ───── */
+const HAS_CAFES = typeof CAFES !== "undefined" && CAFES && CAFES.shops && CAFES.shops.length;
+const CAREA = {}; if (HAS_CAFES) for (const [k, l] of CAFES.areas || []) CAREA[k] = l;
+const CBADGE = {ok:["영업 확인", "b-ok"], wait:["웨이팅", "b-wait"], cand:["현장 확인", "b-walk"]};
+let cafeArea = "all", cafeTag = "all";
+const cafeCard = s => `<article class="ccard" data-area="${esc(s.area)}" data-tags="${esc((s.tags || []).join(" "))}">
+  ${(s.photos || []).length ? `<div class="cg">${(s.photos || []).map(([k, cap]) => IMG[k] ? `<figure><img src="${IMG[k]}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>` : "").join("")}<span class="swipe">옆으로 →</span></div>` : ""}
+  <div class="chead"><span class="carea">${esc(CAREA[s.area] || s.area)}</span>${(s.tags || []).map(t => `<span class="gtag ${esc(t)}">${esc(CAFES.tags[t] || t)}</span>`).join("")}${s.badge && CBADGE[s.badge] ? `<span class="badge ${CBADGE[s.badge][1]}">${CBADGE[s.badge][0]}</span>` : ""}</div>
+  <h4>${esc(s.name)}</h4>
+  <div class="cn">${copyBtn(s.cn, "big")}</div>
+  <p class="one">${esc(s.one)}</p>
+  <dl class="ckv"><dt>대표</dt><dd>${esc((s.menu || []).map(m => m[0]).slice(0, 3).join(" · "))}</dd>
+    <dt>가격</dt><dd>${esc(s.price)}${s.krw ? ` <span>(${esc(s.krw)})</span>` : ""}</dd>
+    <dt>영업</dt><dd>${esc(s.hours)}</dd><dt>위치</dt><dd>${esc(s.where)}</dd></dl>
+  <div class="cmenu">${(s.menu || []).map(m => `<span>${esc(m[0])}${m[1] ? ` <b>${esc(m[1])}</b>` : ""}</span>`).join("")}</div>
+  <p class="ctip"><b>동선 팁</b>${esc(s.tip)}</p>
+  <div class="clinks"><a href="${AMAP(s.cn)}" target="_blank" rel="noopener">${esc(TRIP.map_label)}에서 보기 ↗</a></div>
+  ${(s.src || []).length ? `<details class="csrc"><summary>출처</summary><ul>${s.src.map(([n, u]) => u ? `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a></li>` : `<li>${esc(n)}</li>`).join("")}</ul></details>` : ""}
+</article>`;
+function cafesHTML(){
+  const f1 = CAFES.areas || [["all", "전체"]];
+  const f2 = CAFES.filters || [["all", "전체"]];
+  return `<div class="daylead"><h2>${esc(CAFES.title || "카페·가게")}</h2><p>${esc(CAFES.lead || "")}</p></div>
+    ${CAFES.note ? `<p class="acnote">${esc(CAFES.note)}</p>` : ""}
+    <section class="panel"><h3>어디서 · 무엇을 <small style="color:var(--muted);font-weight:400">눌러서 거르기</small></h3>
+    <p class="muted-s">구역</p><div class="filters" id="cafeareas" role="group" aria-label="구역 필터">${f1.map(([k, l]) => `<button type="button" class="fbtn" data-af="${esc(k)}" aria-pressed="${k === "all" ? "true" : "false"}">${esc(l)}</button>`).join("")}</div>
+    <p class="muted-s">성격</p><div class="filters" id="cafetags" role="group" aria-label="성격 필터">${f2.map(([k, l]) => `<button type="button" class="fbtn" data-tf="${esc(k)}" aria-pressed="${k === "all" ? "true" : "false"}">${esc(l)}</button>`).join("")}</div>
+    <p class="acnote"><b id="cafecount"></b> ${esc(CAFES.countNote || "")}</p></section>
+    <div id="cafelist">${CAFES.shops.map(cafeCard).join("")}</div>`;
+}
+function applyCafeFilter(){
+  const box = $("cafelist"); if (!box) return;
+  let n = 0;
+  for (const el of box.querySelectorAll("[data-area]")) {
+    const on = (cafeArea === "all" || el.dataset.area === cafeArea) && (cafeTag === "all" || el.dataset.tags.split(" ").includes(cafeTag));
+    el.hidden = !on; if (on) n++;
+  }
+  for (const b of document.querySelectorAll("#cafeareas [data-af]")) b.setAttribute("aria-pressed", b.dataset.af === cafeArea ? "true" : "false");
+  for (const b of document.querySelectorAll("#cafetags [data-tf]")) b.setAttribute("aria-pressed", b.dataset.tf === cafeTag ? "true" : "false");
+  const c = $("cafecount");
+  if (c) c.textContent = `${cafeArea === "all" ? "전체" : (CAREA[cafeArea] || cafeArea)} · ${cafeTag === "all" ? "전체" : (CAFES.tags[cafeTag] || cafeTag)} ${n}곳`;
+}
+
 function detailHTML(id){
   const p = PLACES[id]; const toc = p.type === "spot" ? SPOT_TOC : SHOP_TOC;
   const day = DAYS.find(d => d.id === p.day); const stops = day.flow.filter(x => x.stop).map(x => x.stop);
@@ -407,6 +482,7 @@ const HAS_SHOPPING = typeof SHOPPING !== "undefined" && SHOPPING && SHOPPING.gif
 const TABS = [...(HAS_ARRIVAL ? [{id:"arrival", label:ARRIVAL.label || "입국카드", small:ARRIVAL.small || "출국 전"}] : []),
   ...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"},
   ...(HAS_SHOPPING ? [{id:"shopping", label:SHOPPING.label || "기념품", small:SHOPPING.small || "쇼핑"}] : []),
+  ...(HAS_CAFES ? [{id:"cafes", label:CAFES.label || "카페·가게", small:CAFES.small || "동선별"}] : []),
   ...(HAS_STORY ? [{id:"story", label:STORY.label || "여행 이야기", small:STORY.small || "역사·상식"}] : [])];
 const $ = id => document.getElementById(id);
 let lastDay = "d1";
@@ -435,6 +511,14 @@ function render(){
   if (tab === "shopping" && HAS_SHOPPING) {
     $("view").innerHTML = shoppingHTML();
     applyGiftFilter();
+    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (tab === "cafes" && HAS_CAFES) {
+    $("view").innerHTML = cafesHTML();
+    applyCafeFilter();
     [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
     try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     window.scrollTo(0, 0);
@@ -505,6 +589,8 @@ function copyDone(el, ok){
   }, 1600);
 }
 document.addEventListener("click", async e => {
+  const af = e.target.closest("[data-af]"); if (af) { cafeArea = af.dataset.af; applyCafeFilter(); return; }
+  const tf = e.target.closest("[data-tf]"); if (tf) { cafeTag = tf.dataset.tf; applyCafeFilter(); return; }
   const filt = e.target.closest("[data-filter]"); if (filt) { giftTag = filt.dataset.filter; applyGiftFilter(); return; }
   const c = e.target.closest("[data-copy]");
   if (c) { e.preventDefault(); copyDone(c, await copyText(c.dataset.copy)); return; }

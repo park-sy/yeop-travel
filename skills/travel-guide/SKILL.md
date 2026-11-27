@@ -42,7 +42,7 @@ description: 여행 일정(구글 시트 등)을 받아 폰에서 보는 일정�
   - spot: `about(문자열), story[[제목,내용]](3~4개), see[], photo[], route[], entry[]`
   - shop: `about{text,pros[],cons[]}, menu[[한글,현지어,가격,맵기0-3,설명]], order{items[],total,note}, pay[], queue[]`
   - `DAYS[{id,tab,date,iso,title,sub,flow[]}]` — flow 는 `{stop}` · `{move:"walk|didi|metro|mall|cable",min,cost?,note?,steps?[]}` · `{branch,note}` · `{minor,t,name,note}`
-  - `COMMON`(공통 탭 HTML: 결제·이동·먹을 때·앱 체크·날씨·긴급) · `PHRASES[[한글,현지어]]` · `METRO`(선택) · `STORY{label,small,html}`(선택, 이야기 탭) · `ARRIVAL{label,small,html}`(선택, 입국카드 탭 — 출국 전 준비, 탭 맨 앞에 불음)
+  - `COMMON`(공통 탭 HTML: 결제·이동·먹을 때·앱 체크·날씨·긴급) · `PHRASES[[한글,현지어]]` · `METRO`(선택) · `STORY{label,small,html}`(선택, 이야기 탭) · `ARRIVAL{label,small,html}`(선택, 입국카드 탭 — 출국 전 준비, 탭 맨 앞에 불음) · `SHOPPING{...}`(선택, 기념품 탭) · `CAFES{areas,tags,shops[]}`(선택, 동선별 카페·가게 탭 — `shops` 는 `{name,cn,area,tags,price,krw,hours,where,one,menu,tip,photos[[이미지키,캡션]],src}`)
 - `badge`: ok 확정 · pay 예매 필요 · open 오픈 대기 · wait 현장 웨이팅 · line 원격 줄서기 · free 무료 · opt 선택 · cand 후보
 - 새 이동 수단이 필요하면 `engine/template.html` 의 `MOVE` 에 아이콘을 추가 (틀 변경 → 다른 여행도 재빌드).
 

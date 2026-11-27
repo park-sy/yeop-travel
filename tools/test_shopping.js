@@ -19,7 +19,7 @@ const go = tab => { window.location.hash = "#" + tab; window.dispatchEvent(new w
 
 const tabs = [...doc.querySelectorAll("#tabs button")].map(b => b.dataset.id);
 console.log("탭:", tabs.join(" | "));
-ok(tabs.length === 8, "탭 8개 (입국카드+4일차+공통+기념품+이야기)");
+ok(tabs.length === 9, "탭 9개 (입국카드+4일차+공통+기념품+카페·가게+이야기)");
 ok(tabs.includes("shopping"), "기념품 탭이 붙었다");
 ok(tabs[tabs.indexOf("common") + 1] === "shopping", "기념품 탭이 공통 다음");
 
@@ -87,6 +87,38 @@ ok(/1PC/.test(shopText) && /2L/.test(shopText), "수하물·주류 면세 안내
 // 츠지커우 링크가 실제로 상세로 가는지
 stores.find(s => s.querySelector('[data-open="ciqikou"]')).querySelector("[data-open]").dispatchEvent(new window.MouseEvent("click", {bubbles: true}));
 ok(window.location.hash === "#p-ciqikou", "츠지커우 링크 → 장소 상세 이동 (" + window.location.hash + ")");
+
+// 카페·가게 탭
+go("cafes");
+ok(tabs[tabs.indexOf("shopping") + 1] === "cafes", "카페 탭이 기념품 다음");
+ok(tabs[tabs.indexOf("cafes") + 1] === "story", "카페 탭 다음이 이야기");
+const cafes = [...doc.querySelectorAll("#cafelist .ccard")];
+console.log("카페/가게 카드:", cafes.length);
+ok(cafes.length >= 20, "카페·가게 카드 20곳 이상 (" + cafes.length + ")");
+ok(doc.querySelectorAll("#cafeareas [data-af]").length === 7, "구역 필터 7개(전체+6구역)");
+ok(doc.querySelectorAll("#cafetags [data-tf]").length === 5, "성격 필터 5개(전체/카페/디저트/간식/가게·소품)");
+ok(cafes.every(c => c.querySelectorAll(".cg img").length >= 2), "카드마다 사진 2장 이상");
+ok(cafes.every(c => [...c.querySelectorAll(".cg img")].every(i => /^data:image\/jpeg;base64,/.test(i.getAttribute("src")))), "사진이 모두 내장(base64) 이미지");
+ok(cafes.every(c => c.querySelector(".cg figcaption")), "사진마다 캡션");
+ok(cafes.every(c => c.querySelector("[data-copy]")), "카드마다 중국어 복사 버튼");
+ok(cafes.every(c => /amap\.com\/search/.test(c.innerHTML)), "카드마다 고덕지도 검색 링크");
+ok(cafes.every(c => /元/.test(c.textContent)), "카드마다 위안 가격");
+ok(cafes.every(c => /동선 팁/.test(c.textContent)), "카드마다 동선 팁");
+const visC = () => cafes.filter(c => !c.hidden).length;
+const clickAf = k => doc.querySelector(`#cafeareas [data-af="${k}"]`).dispatchEvent(new window.MouseEvent("click", {bubbles: true}));
+clickAf("ciqikou");
+ok(visC() === 4, "츠지커우 필터 4곳 (" + visC() + ")");
+ok(doc.querySelector('#cafeareas [data-af="ciqikou"]').getAttribute("aria-pressed") === "true", "구역 버튼 눌린 상태");
+ok(/츠지커우/.test(doc.getElementById("cafecount").textContent), "필터 결과 문구: " + doc.getElementById("cafecount").textContent);
+doc.querySelector('#cafetags [data-tf="cafe"]').dispatchEvent(new window.MouseEvent("click", {bubbles: true}));
+ok(visC() === 3, "츠지커우 × 카페 = 3곳 (" + visC() + ")");
+clickAf("all");
+doc.querySelector('#cafetags [data-tf="all"]').dispatchEvent(new window.MouseEvent("click", {bubbles: true}));
+ok(visC() === cafes.length, "전체로 되돌리면 모두 보인다");
+// 카드 안 복사 버튼을 눌러도 구역 필터가 바뀌지 않는지 (data-area 충돌 방지)
+cafes[0].querySelector("[data-copy]").dispatchEvent(new window.MouseEvent("click", {bubbles: true}));
+await new Promise(r => setTimeout(r, 30));
+ok(visC() === cafes.length, "카드 안 버튼 클릭은 필터를 건드리지 않는다");
 
 // 개인정보 점검 (빌드 결과 전체)
 const pii = ["PARK", "SANGYEOP", "SANG YEOP", "9992610234430", "DVRJHZ", "PVVH3Z", "2627-6970", "meko6970", "@gmail", "@naver"];
