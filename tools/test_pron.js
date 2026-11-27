@@ -63,6 +63,15 @@ ok(talk.length >= 3 && [...talk].every(p => p.querySelector(".yin").textContent.
 ok(doc.querySelectorAll(".toc button")[1]?.textContent.includes("현지에서 쓸 말"), "목차 두 번째가 '현지에서 쓸 말'");
 ok(doc.querySelector("#sec-talk .yin").textContent === "워 짜이 다 중 디엔 핑 취 러 하오 치엔 미엔 하이 요우 지 줘", `발음: ${doc.querySelector("#sec-talk .yin").textContent}`);
 
+for (const id of ["ciqikou", "shibati", "xiahaoli", "longmenhao"]) {
+  go("p-" + id);
+  ok(doc.querySelectorAll(".dpics figure img").length >= 2, `${id}: 상세 사진 묶음 2장 이상`);
+  const near = doc.querySelectorAll("#sec-near .dish");
+  ok(near.length >= 2 && [...near].every(d => d.querySelector(".yin")?.textContent.trim()), `${id}: 근처 먹을 곳·카페 ${near.length}곳 모두 발음`);
+}
+go("p-airport");
+ok(!doc.querySelector("#sec-near") && ![...doc.querySelectorAll(".toc button")].some(b => b.textContent.includes("근처")), "근처 정보 없는 장소엔 칸·목차 없음");
+
 go("common");
 const ph = doc.querySelectorAll(".phrase");
 ok(ph.length > 0 && [...ph].every(p => p.querySelector(".yin").textContent.trim() && p.querySelector(".say")), `공통 탭 문장 ${ph.length}개 모두 발음·듣기`);
