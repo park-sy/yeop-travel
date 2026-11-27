@@ -2,7 +2,7 @@
 
    node tools/pron.js trips/<slug>
 
-   data.js 에 나오는 한자 덩어리마다 병음과 한글 발음을 만들어 둔다. 빌드된 페이지는
+   data.js·talk.js 에 나오는 한자 덩어리마다 병음과 한글 발음을 만들어 둔다. 빌드된 페이지는
    이 표만 읽는다 (사전 라이브러리를 페이지에 싣지 않으려고). data.js 를 고친 뒤
    새 한자가 생기면 build.py 가 "pron.json 다시 만들기" 를 요구한다.
 
@@ -81,8 +81,8 @@ if (require.main === module) {
   let pinyinLib;
   try { pinyinLib = require("pinyin-pro"); }
   catch (e) { console.error("pinyin-pro 가 없어요. 저장소 루트에서 npm install 먼저"); process.exit(1); }
-  const dataFile = path.join(dir, "data.js");
-  const table = buildTable(fs.readFileSync(dataFile, "utf8"), pinyinLib);
+  const text = ["data.js", "talk.js"].map(f => path.join(dir, f)).filter(f => fs.existsSync(f)).map(f => fs.readFileSync(f, "utf8")).join("\n");
+  const table = buildTable(text, pinyinLib);
   const unknown = Object.entries(table).filter(([, v]) => /[a-zü]/i.test(v.h)).map(([k, v]) => `${k}=${v.h}`);
   fs.writeFileSync(path.join(dir, "pron.json"), JSON.stringify(table, null, 1) + "\n");
   console.log(`${dir}/pron.json: 한자 덩어리 ${Object.keys(table).length}개`);

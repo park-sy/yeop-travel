@@ -1,8 +1,19 @@
 const fs=require("fs");
-const src=fs.readFileSync(process.argv[2],"utf8");
+let bad0=0;
+const path=require("path");
+const talkFile=path.join(path.dirname(process.argv[2]),"talk.js");
+const src=fs.readFileSync(process.argv[2],"utf8")+(fs.existsSync(talkFile)?"\n"+fs.readFileSync(talkFile,"utf8"):"");
 eval(src.replace(/^const /gm,"var "));
+if(typeof TALK!=="undefined"&&TALK){
+  for(const id of Object.keys(TALK)) if(!PLACES[id]){console.log("현지에서 쓸 말: 없는 장소",id);bad0++}
+  for(const id of Object.keys(PLACES)){
+    const t=TALK[id]||[];
+    if(t.length<3){console.log("현지에서 쓸 말 3개 미만",id);bad0++}
+    for(const x of t) if(!Array.isArray(x)||x.length!==2||!x[0]||!/[\u3400-\u9fff]/.test(x[1])){console.log("현지에서 쓸 말 형식",id,JSON.stringify(x));bad0++}
+  }
+}
 const need={spot:["glance","about","story","see","photo","route","entry","warn","planb","src"],shop:["glance","about","menu","order","pay","queue","warn","planb","src"]};
-let bad=0; const used=new Set();
+let bad=bad0; const used=new Set();
 for(const d of DAYS) for(const x of d.flow){ if(x.stop){ if(!PLACES[x.stop]){console.log("없는 장소",x.stop);bad++} used.add(x.stop)} }
 for(const [id,p] of Object.entries(PLACES)){
   for(const k of need[p.type]) if(!p[k]||(Array.isArray(p[k])&&!p[k].length)){console.log("빈 목차",id,k);bad++}

@@ -3,7 +3,7 @@
     python3 -I engine/build.py trips/chongqing-2026            # → chongqing-2026/index.html
     python3 -I engine/build.py trips/chongqing-2026 out.html   # 다른 곳에 쓰기
 
-여행 폴더에 있어야 하는 것: trip.json · data.js · credits.json · img/*.jpg
+여행 폴더에 있어야 하는 것: trip.json · data.js · credits.json · img/*.jpg (talk.js 는 선택)
 중국어가 있으면 pron.json(한글 발음 표)도 — node tools/pron.js trips/<slug> 로 만든다
 """
 import base64
@@ -31,6 +31,15 @@ def load_trip(trip_dir: Path) -> dict:
     return trip
 
 
+def trip_source(trip_dir: Path) -> str:
+    """data.js + talk.js(선택, 장소별 현지에서 쓸 말)."""
+    parts = [(trip_dir / "data.js").read_text(encoding="utf-8")]
+    talk = trip_dir / "talk.js"
+    if talk.exists():
+        parts.append(talk.read_text(encoding="utf-8"))
+    return "\n".join(parts)
+
+
 def load_pron(trip_dir: Path, data: str) -> dict:
     """data.js 의 한자 덩어리가 모두 pron.json 에 있어야 한다 (없으면 발음이 빈칸으로 나간다)."""
     runs = set(HAN_RUN.findall(data))
@@ -46,7 +55,7 @@ def load_pron(trip_dir: Path, data: str) -> dict:
 def build(trip_dir: Path, out_path: Path) -> None:
     trip = load_trip(trip_dir)
     template = (ENGINE / "template.html").read_text(encoding="utf-8")
-    data = (trip_dir / "data.js").read_text(encoding="utf-8")
+    data = trip_source(trip_dir)
     if "docs.google.com/spreadsheets" in data:
         sys.exit("data.js 에 구글 시트 링크가 있어요. 공개 저장소라 빼고 빌드해요 (SHEET 의 url 을 \"\" 로)")
     pron = load_pron(trip_dir, data)

@@ -189,6 +189,9 @@ main{padding-block:16px 48px}
 .phrase:first-child{border-top:0;margin-top:0;padding-top:0}
 .phrase .zhb{font-family:var(--f-display);font-size:20px;font-weight:600}
 .phrase .ko{font-size:13px;color:var(--muted)}
+.phrase .say{padding:0;min-height:0;width:40px;height:40px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--river)}
+.phrase .say.on{background:var(--river);border-color:var(--river);color:var(--bg)}
+.talkhint{font-size:12px;color:var(--muted);margin:0 0 10px}
 .phrase .pt{min-width:0;display:flex;flex-direction:column;gap:2px}
 .phrase .yin{font-size:13px;font-weight:600;color:var(--river)}
 .phrase .pb{display:flex;gap:6px;align-items:center}
@@ -554,13 +557,19 @@ function applyCafeFilter(){
   if (c) c.textContent = `${cafeArea === "all" ? "전체" : (CAREA[cafeArea] || cafeArea)} · ${cafeTag === "all" ? "전체" : (CAFES.tags[cafeTag] || cafeTag)} ${n}곳`;
 }
 
+/* 현지에서 쓸 말: 공통 탭 문장과 같은 모양 (중국어 · 한글 발음 · 뜻 · 듣기 · 복사) */
+const phraseHTML = ([ko, zh]) => `<div class="phrase"><div class="pt"><span class="zhb">${esc(zh)}</span><span class="yin">${esc(yin(zh))}</span><span class="ko">${esc(ko)}</span></div><div class="pb">${sayBtn(zh)}<button type="button" data-copy="${esc(zh)}">복사</button></div></div>`;
+const talkHTML = list => `<p class="talkhint">🔊 누르면 중국어로 읽어 줘요. 화면을 보여 줘도 돼요.</p>${list.map(phraseHTML).join("")}`;
+
 function detailHTML(id){
-  const p = PLACES[id]; const toc = p.type === "spot" ? SPOT_TOC : SHOP_TOC;
+  const p = PLACES[id]; const base = p.type === "spot" ? SPOT_TOC : SHOP_TOC;
+  const talk = typeof TALK !== "undefined" && TALK[id] && TALK[id].length ? TALK[id] : null;
+  const toc = talk ? [base[0], ["talk", "현지에서 쓸 말"], ...base.slice(1)] : base;
   const day = DAYS.find(d => d.id === p.day); const stops = day.flow.filter(x => x.stop).map(x => x.stop);
   const i = stops.indexOf(id); const prev = stops[i - 1], next = stops[i + 1];
   const src = imgSrc(p.img);
   const hero = src ? `<figure class="dhero"><img src="${src}" alt="${esc(p.name)}">${CREDITS[p.img] ? `<figcaption>${p.img === "nanan" ? "남안구 강변 · " : ""}${esc(CREDITS[p.img].artist)} · ${esc(CREDITS[p.img].license)}</figcaption>` : ""}</figure>` : "";
-  const secs = toc.map(([k, label], n) => `<section class="dsec${k === "warn" ? " warn" : ""}" id="sec-${k}"><h3><b>${String(n + 1).padStart(2, "0")}</b>${label}</h3>${(SECTION[k] || listSection(k))(p)}</section>`).join("");
+  const secs = toc.map(([k, label], n) => `<section class="dsec${k === "warn" ? " warn" : ""}" id="sec-${k}"><h3><b>${String(n + 1).padStart(2, "0")}</b>${label}</h3>${(k === "talk" ? talkHTML(talk) : (SECTION[k] || listSection(k))(p))}</section>`).join("");
   const pg = (pid, cls, dir) => pid ? `<button type="button" class="${cls}" data-open="${pid}"><span>${dir}</span>${esc(PLACES[pid].name)}</button>` : "<span></span>";
   return `${hero}<div class="dhead"><div class="crow"><span class="tchip ${p.type}">${TYPE[p.type]}</span>${badge(p.badge)}<span class="time">${esc(day.tab)} · ${esc(p.t)}</span></div>
     <h2>${esc(p.name)}</h2><p class="one">${esc(p.one)}</p>
@@ -628,7 +637,7 @@ function renderView(){
     $("view").innerHTML = COMMON;
     if ($("metroslot") && typeof METRO !== "undefined") $("metroslot").innerHTML = metroPanelHTML();
     if (pendingJump) { const id = pendingJump; pendingJump = null; requestAnimationFrame(() => $(id)?.scrollIntoView({block:"start"})); }
-    if ($("phrases") && typeof PHRASES !== "undefined") $("phrases").innerHTML = PHRASES.map(([ko, zh]) => `<div class="phrase"><div class="pt"><span class="zhb">${esc(zh)}</span><span class="yin">${esc(yin(zh))}</span><span class="ko">${esc(ko)}</span></div><div class="pb">${sayBtn(zh)}<button type="button" data-copy="${esc(zh)}">복사</button></div></div>`).join("");
+    if ($("phrases") && typeof PHRASES !== "undefined") $("phrases").innerHTML = PHRASES.map(phraseHTML).join("");
   } else if (tab === "story" && HAS_STORY) {
     $("view").innerHTML = STORY.html;
     selectTab(tab);

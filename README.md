@@ -16,6 +16,7 @@ engine/          모든 여행이 같이 쓰는 틀
   check.js       빈 목차·없는 장소·일정에 안 쓰인 장소 검사
 trips/<slug>/    여행 하나의 원본
   trip.json      제목·표지 문구·시간대·지도 검색 주소
+  talk.js        TALK — 장소별 현지에서 쓸 말 [한국어, 중국어] (선택, 장소 상세 2번 칸)
   data.js        PLACES · DAYS · COMMON(공통 탭) · PHRASES · METRO(선택) · STORY(선택, 이야기 탭) · ARRIVAL(선택, 입국카드 탭) · SHOPPING(선택, 기념품 탭) · CAFES(선택, 카페·가게 탭)
   img/*.jpg      사진 (Wikimedia Commons, 640~720px · 빌드 때 base64 로 들어감)
   credits.json   사진 저작자·라이선스

@@ -57,6 +57,12 @@ q.click();
 const u = spoken.at(-1);
 ok(u && u.text === "三个人现在有位置吗？" && u.lang === "zh-CN" && u.voice?.name === "Tingting", "누르면 중국어(zh-CN) 음성으로 읽음");
 
+go("p-jiucun");
+const talk = doc.querySelectorAll("#sec-talk .phrase");
+ok(talk.length >= 3 && [...talk].every(p => p.querySelector(".yin").textContent.trim() && p.querySelector(".say") && p.querySelector("[data-copy]")), `지우춘 '현지에서 쓸 말' ${talk.length}개 모두 발음·듣기·복사`);
+ok(doc.querySelectorAll(".toc button")[1]?.textContent.includes("현지에서 쓸 말"), "목차 두 번째가 '현지에서 쓸 말'");
+ok(doc.querySelector("#sec-talk .yin").textContent === "워 짜이 다 중 디엔 핑 취 러 하오 치엔 미엔 하이 요우 지 줘", `발음: ${doc.querySelector("#sec-talk .yin").textContent}`);
+
 go("common");
 const ph = doc.querySelectorAll(".phrase");
 ok(ph.length > 0 && [...ph].every(p => p.querySelector(".yin").textContent.trim() && p.querySelector(".say")), `공통 탭 문장 ${ph.length}개 모두 발음·듣기`);
