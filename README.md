@@ -16,7 +16,7 @@ engine/          모든 여행이 같이 쓰는 틀
   check.js       빈 목차·없는 장소·일정에 안 쓰인 장소 검사
 trips/<slug>/    여행 하나의 원본
   trip.json      제목·표지 문구·시간대·지도 검색 주소
-  data.js        PLACES · DAYS · COMMON(공통 탭) · PHRASES · METRO(선택) · STORY(선택, 이야기 탭) · ARRIVAL(선택, 입국카드 탭)
+  data.js        PLACES · DAYS · COMMON(공통 탭) · PHRASES · METRO(선택) · STORY(선택, 이야기 탭) · ARRIVAL(선택, 입국카드 탭) · SHOPPING(선택, 기념품 탭)
   img/*.jpg      사진 (Wikimedia Commons, 720px)
   credits.json   사진 저작자·라이선스
 <slug>/index.html  빌드 결과 — Pages 가 이걸 보여준다
@@ -45,6 +45,10 @@ git add -A && git commit -m "fix: ..." && git push   # 1분쯤 뒤 링크에 반
 ## 이야기 탭 (선택)
 
 `data.js` 에 `STORY = {label, small, html}` 을 두면 마지막 탭이 하나 늘어난다. `html` 안에서 `data-jump="id"` 로 목차를 만들면 그 `id` 섹션으로 스크롤된다. 없는 `id` 는 `check.js` 가 잡는다. `STORY` 가 없으면 탭도 생기지 않는다.
+
+## 기념품 탭 (선택)
+
+`data.js` 에 `SHOPPING = {label, small, title, lead, warn, filters, tags, gifts, stores, tips, carry, src}` 을 두면 공통 탭 뒤에 한 탭이 늘어난다. `gifts[]` 는 `{name, cn, price, krw, tags, why, where, note, warn}` 이고 `tags` 값은 `tags` 객체의 키(`work`/`friend`/`family`)를 쓴다. 화면 위 필터 버튼이 `tags` 로 카드를 거르고, 카드의 `cn` 은 다른 곳과 같은 복사 버튼으로 떨어진다. `stores[]` 는 `{name, cn, kind, addr, why, best, goto}` — `cn` 으로 고덕지도 검색 링크가 붙고, `goto` 에 장소 id 를 넣으면 그 장소 상세로 가는 버튼도 붙는다. `check.js` 가 빈 칸·모르는 태그를 잡는다.
 
 ## 지키는 것
 

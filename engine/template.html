@@ -217,6 +217,30 @@ main{padding-block:16px 48px}
 .acgo{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 13px;margin:8px 6px 0 0;border-radius:10px;background:var(--river);color:var(--bg);text-decoration:none;font-weight:700;font-size:14px}
 .acgo.ghost{background:var(--surface);color:var(--river);border:1px solid var(--line)}
 .acnote{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.55}
+/* 기념품·쇼핑 탭 — 대상별 태그로 거르는 카드 */
+.filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.fbtn{flex:0 0 auto;min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:14px;font-weight:600;line-height:1.2;cursor:pointer}
+.fbtn[aria-pressed="true"]{background:var(--river);border-color:var(--river);color:var(--bg)}
+.gift{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.gtop{display:flex;gap:8px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.gtop h4{margin:0;font-size:16px;line-height:1.35}
+.gprice{font:500 12px/1.4 var(--f-mono);color:var(--gold);text-align:right}
+.gprice span{display:block;color:var(--muted);font-size:11px;font-weight:400}
+.gtags{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0 0}
+.gtag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--river-soft);color:var(--river)}
+.gtag.friend{background:var(--gold-soft);color:var(--gold)}
+.gtag.family{background:var(--chili-soft);color:var(--chili)}
+.gift .dish-m{margin:8px 0 4px}
+.gift p{margin:2px 0 0;font-size:13.5px;line-height:1.58}
+.gmeta{margin:6px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55}
+.gmeta b{color:var(--ink);font-weight:600}
+.gwarn{color:var(--chili);font-weight:700}
+.store{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:11px 13px;margin-bottom:10px}
+.store h4{margin:0;font-size:15.5px;line-height:1.4}
+.store .sk{font-size:11px;font-weight:700;color:var(--gold);background:var(--gold-soft);border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:2px;white-space:nowrap}
+.store .addr{font-size:12.5px;color:var(--muted);margin:3px 0 4px;line-height:1.55}
+.store p{margin:5px 0 0;font-size:13.5px;line-height:1.58}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);z-index:20;max-width:calc(100% - 40px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;line-height:1.3;padding:9px 15px;border-radius:999px;text-align:center;opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease}
 .toast.on{opacity:.94;transform:translate(-50%,0)}
 footer{color:var(--muted);font-size:12px;padding-block:12px 32px;border-top:1px solid var(--line)}
@@ -318,6 +342,49 @@ const SECTION = {
 };
 const listSection = key => p => ul(p[key]);
 
+/* ───── 기념품·쇼핑 탭 (대상별 태그 필터) ───── */
+const TAGS = (typeof SHOPPING !== "undefined" && SHOPPING && SHOPPING.tags) || {work:"회사용", friend:"지인용", family:"가족용"};
+let giftTag = "all";
+const giftHTML = g => `<article class="gift" data-tags="${esc((g.tags || []).join(" "))}">
+  <div class="gtop"><h4>${esc(g.name)}</h4><div class="gprice">${esc(g.price)}<span>약 ${esc(g.krw)}</span></div></div>
+  <div class="gtags">${(g.tags || []).map(t => `<span class="gtag ${esc(t)}">${esc(TAGS[t] || t)}</span>`).join("")}</div>
+  <div class="dish-m">${copyBtn(g.cn, "big")}</div>
+  <p>${esc(g.why)}</p>
+  ${g.where ? `<p class="gmeta"><b>어디서</b> ${esc(g.where)}</p>` : ""}
+  ${g.note ? `<p class="gmeta">${g.warn ? `<span class="gwarn">⚠ ${esc(g.note)}</span>` : esc(g.note)}</p>` : ""}</article>`;
+const storeHTML = s => `<article class="store"><h4>${esc(s.name)}<span class="sk">${esc(s.kind)}</span></h4>
+  <div class="addr">${esc(s.addr)}</div>
+  <div class="cn">${copyBtn(s.cn)}<a href="${AMAP(s.cn)}" target="_blank" rel="noopener">${esc(TRIP.map_label)} ↗</a>${s.goto ? `<button type="button" class="linkbtn" data-open="${esc(s.goto)}">${esc(s.gotoLabel || "가이드에서 보기")} →</button>` : ""}</div>
+  <p>${esc(s.why)}</p>
+  ${s.best ? `<p class="gmeta"><b>여기서 살 것</b> ${esc(s.best)}</p>` : ""}</article>`;
+function shoppingHTML(){
+  const f = SHOPPING.filters || [["all","전체"],["work","회사용"],["friend","지인용"],["family","가족용"]];
+  const tips = (SHOPPING.tips || []).map(t => `<li>${esc(t)}</li>`).join("");
+  const carry = (SHOPPING.carry || []).map(t => `<li>${esc(t)}</li>`).join("");
+  const src = (SHOPPING.src || []).map(([n, u]) => `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("");
+  return `<div class="daylead"><h2>${esc(SHOPPING.title || "기념품·쇼핑")}</h2><p>${esc(SHOPPING.lead || "")}</p></div>
+    ${SHOPPING.warn ? `<p class="callout">${esc(SHOPPING.warn)}</p>` : ""}
+    <section class="panel"><h3>누구에게 줄까 <small style="color:var(--muted);font-weight:400">눌러서 거르기</small></h3>
+    <div class="filters" id="giftfilters" role="group" aria-label="대상별 필터">${f.map(([k, l]) => `<button type="button" class="fbtn" data-filter="${esc(k)}" aria-pressed="${k === "all" ? "true" : "false"}">${esc(l)}</button>`).join("")}</div>
+    <p class="acnote"><b id="giftcount"></b> ${esc(SHOPPING.countNote || "")}</p></section>
+    <div id="giftlist">${SHOPPING.gifts.map(giftHTML).join("")}</div>
+    <section class="panel" style="margin-top:14px"><h3>해방비에서 어디서 살까</h3><p class="acnote">${esc(SHOPPING.storeLead || "")}</p></section>
+    ${(SHOPPING.stores || []).map(storeHTML).join("")}
+    ${tips ? `<section class="panel"><h3>사기 전에</h3><ul class="warnlist">${tips}</ul></section>` : ""}
+    ${carry ? `<section class="panel"><h3>기내 · 위탁 · 세관</h3><ul>${carry}</ul></section>` : ""}
+    ${src ? `<section class="panel"><h3>출처</h3><ul class="src">${src}</ul></section>` : ""}`;
+}
+function applyGiftFilter(){
+  const box = $("giftlist"); if (!box) return;
+  let n = 0;
+  for (const el of box.querySelectorAll("[data-tags]")) {
+    const on = giftTag === "all" || el.dataset.tags.split(" ").includes(giftTag);
+    el.hidden = !on; if (on) n++;
+  }
+  for (const b of document.querySelectorAll("#giftfilters [data-filter]")) b.setAttribute("aria-pressed", b.dataset.filter === giftTag ? "true" : "false");
+  const c = $("giftcount"); if (c) c.textContent = `${giftTag === "all" ? "전체" : (TAGS[giftTag] || giftTag)} ${n}개`;
+}
+
 function detailHTML(id){
   const p = PLACES[id]; const toc = p.type === "spot" ? SPOT_TOC : SHOP_TOC;
   const day = DAYS.find(d => d.id === p.day); const stops = day.flow.filter(x => x.stop).map(x => x.stop);
@@ -336,8 +403,10 @@ function detailHTML(id){
 /* ───── 라우팅 ───── */
 const HAS_STORY = typeof STORY !== "undefined" && STORY && STORY.html;
 const HAS_ARRIVAL = typeof ARRIVAL !== "undefined" && ARRIVAL && ARRIVAL.html;
+const HAS_SHOPPING = typeof SHOPPING !== "undefined" && SHOPPING && SHOPPING.gifts && SHOPPING.gifts.length;
 const TABS = [...(HAS_ARRIVAL ? [{id:"arrival", label:ARRIVAL.label || "입국카드", small:ARRIVAL.small || "출국 전"}] : []),
   ...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"},
+  ...(HAS_SHOPPING ? [{id:"shopping", label:SHOPPING.label || "기념품", small:SHOPPING.small || "쇼핑"}] : []),
   ...(HAS_STORY ? [{id:"story", label:STORY.label || "여행 이야기", small:STORY.small || "역사·상식"}] : [])];
 const $ = id => document.getElementById(id);
 let lastDay = "d1";
@@ -358,6 +427,14 @@ function render(){
   }
   if (tab === "arrival" && HAS_ARRIVAL) {
     $("view").innerHTML = ARRIVAL.html;
+    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (tab === "shopping" && HAS_SHOPPING) {
+    $("view").innerHTML = shoppingHTML();
+    applyGiftFilter();
     [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
     try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     window.scrollTo(0, 0);
@@ -428,6 +505,7 @@ function copyDone(el, ok){
   }, 1600);
 }
 document.addEventListener("click", async e => {
+  const filt = e.target.closest("[data-filter]"); if (filt) { giftTag = filt.dataset.filter; applyGiftFilter(); return; }
   const c = e.target.closest("[data-copy]");
   if (c) { e.preventDefault(); copyDone(c, await copyText(c.dataset.copy)); return; }
   const open = e.target.closest("[data-open]"); if (open) { location.hash = "p-" + open.dataset.open; return; }

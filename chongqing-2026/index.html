@@ -218,6 +218,30 @@ main{padding-block:16px 48px}
 .acgo{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 13px;margin:8px 6px 0 0;border-radius:10px;background:var(--river);color:var(--bg);text-decoration:none;font-weight:700;font-size:14px}
 .acgo.ghost{background:var(--surface);color:var(--river);border:1px solid var(--line)}
 .acnote{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.55}
+/* 기념품·쇼핑 탭 — 대상별 태그로 거르는 카드 */
+.filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.fbtn{flex:0 0 auto;min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:14px;font-weight:600;line-height:1.2;cursor:pointer}
+.fbtn[aria-pressed="true"]{background:var(--river);border-color:var(--river);color:var(--bg)}
+.gift{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.gtop{display:flex;gap:8px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.gtop h4{margin:0;font-size:16px;line-height:1.35}
+.gprice{font:500 12px/1.4 var(--f-mono);color:var(--gold);text-align:right}
+.gprice span{display:block;color:var(--muted);font-size:11px;font-weight:400}
+.gtags{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0 0}
+.gtag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--river-soft);color:var(--river)}
+.gtag.friend{background:var(--gold-soft);color:var(--gold)}
+.gtag.family{background:var(--chili-soft);color:var(--chili)}
+.gift .dish-m{margin:8px 0 4px}
+.gift p{margin:2px 0 0;font-size:13.5px;line-height:1.58}
+.gmeta{margin:6px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55}
+.gmeta b{color:var(--ink);font-weight:600}
+.gwarn{color:var(--chili);font-weight:700}
+.store{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:11px 13px;margin-bottom:10px}
+.store h4{margin:0;font-size:15.5px;line-height:1.4}
+.store .sk{font-size:11px;font-weight:700;color:var(--gold);background:var(--gold-soft);border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:2px;white-space:nowrap}
+.store .addr{font-size:12.5px;color:var(--muted);margin:3px 0 4px;line-height:1.55}
+.store p{margin:5px 0 0;font-size:13.5px;line-height:1.58}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);z-index:20;max-width:calc(100% - 40px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;line-height:1.3;padding:9px 15px;border-radius:999px;text-align:center;opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease}
 .toast.on{opacity:.94;transform:translate(-50%,0)}
 footer{color:var(--muted);font-size:12px;padding-block:12px 32px;border-top:1px solid var(--line)}
@@ -255,13 +279,13 @@ const PLACES = {
 // ───────────────────────── 1일차
 airport: {type:"spot", day:"d1", t:"17:00–18:15", stay:"입국 75분", name:"장베이 국제공항 입국", cn:"重庆江北国际机场", badge:"ok",
   one:"입국심사·짐 찾기 75분. 데이터 연결부터 확인",
-  glance:[["비용","-"],["예약·입장","항공 확정 · 도착 터미널은 체크인 때 확인"],["위치","위베이구 · 시내까지 45~60분"]],
+  glance:[["비용","-"],["예약·입장","CA0440 · 인천 T1 14:00 → 충칭 T3 16:55"],["위치","위베이구 · 시내까지 45~60분"]],
   about:"충칭 북쪽 위베이구의 관문 공항이에요. 1990년에 문을 열고 지금은 국제선까지 오가는 대형 공항이 됐어요. 활주로를 벗어나 시내로 들어오는 45분이 이 도시의 예고편이에요. 산을 깎아 낸 고가도로, 강을 두 번 건너는 다리, 빌딩 사이를 비집고 도는 진입로가 이어지죠. 충칭 사람들이 ‘지도가 필요 없는 도시’라고 말하는 이유를 첫 30분에 알게 돼요.",
   story:[["충칭이라는 이름", "1189년 남송의 조돈(赵惇)이 이 지역 공왕(恭王)에 봉해지고 곧이어 황제(광종)에 올랐어요. ‘경사가 겹쳤다(双重喜庆)’고 해서 고을 이름을 ‘重庆’으로 바꾼 게 지금까지 내려와요. 그래서 충칭 사람들은 도시 이름을 ‘두 번의 축하’라고 풀어 말하기도 해요."], ["베이징보다 큰 ‘시’", "충칭은 베이징·상하이·톈진과 같은 중국 4대 직할시예요. 행정구역 면적이 대한민국의 약 80%이고 인구는 3,000만 명이 넘어요. 행정구역으로는 세계에서 가장 큰 ‘시’ 가운데 하나로 꼽히죠. 우리가 다니는 곳은 그중 두 강이 만나는 도심 ‘위중반도’ 일대예요. 공항에서 도심까지 45분이 걸리는 것도 그래서예요."], ["강북의 새 도시, 위베이", "공항이 있는 위베이구는 1990년대 이후 산을 깎고 골짜기를 메워 만든 신도시예요. 그 옛날에는 밭과 마을이던 땅에 국제선 터미널과 전시장, 대형 아파트 단지가 들어섰어요. 공항에서 시내로 오는 창밖 풍경이 ‘옛 충칭’과 ‘새 충칭’이 번갈아 나오는 이유예요."], ["공항에서 시내까지", "가는 길에 강을 건너며 고가도로가 빌딩 사이를 몇 겹으로 휘감는 풍경이 나와요. 충칭 운전이 왜 어려운지 첫 30분 만에 감이 와요. 택시 기사님이 ‘위야 아래야(上面还是下面)?’라고 묻는 말을 이때 처음 들을 거예요. 같은 지도 좌표인데 도로 높이가 달라서 생기는 질문이에요."]],
   see:["입국카드 온라인 제출분 QR 캡처를 바로 꺼낼 수 있게", "짐 찾는 동안 eSIM·로밍 데이터 연결 확인", "알리페이 ‘出行’ 승차코드가 뜨는지 한 번 열어보기", "창밖으로 겹겹이 꼬인 입체 교차로 구경 (디디 뒷좌석 창가)"],
   photo:["해당 없음. 공항에서는 빨리 빠져나가는 게 우선"],
   route:["입국장 → 출구 표지판 ‘网约车(인터넷 호출차)’ 따라 디디 승차장", "디디 목적지: 호텔 중국어명 복사·붙여넣기 (闲隅高空江景酒店)", "호출이 안 잡히면 공식 택시 줄(出租车) 이용"],
-  entry:["무비자 30일 (일반여권). 입국카드 온라인 제출 또는 현장 작성", "귀국 항공권·호텔 바우처(중문 주소) 보여줄 준비"],
+  entry:["무비자 30일 (일반여권). 입국카드 온라인 제출 또는 현장 작성", "도착 터미널 충칭 장베이 T3 (CA0440 · 위탁 1PC)", "귀국 항공권·호텔 바우처(중문 주소) 보여줄 준비"],
   warn:["입국장 ‘택시 대행’ 호객은 무시", "볼펜 1자루 상비(종이 입국카드 대비)"],
   planb:["입국이 늦어지면 호텔엔 짐만 맡기고 드론쇼로 직행 (시트 규칙)", "드론쇼도 어려우면 홍애동만 보고 첫날 종료"],
   src:[SHEET]},
@@ -657,13 +681,13 @@ cableway: {type:"spot", day:"d3", t:"20:10–21:10", stay:"대기+탑승 60분",
 // ───────────────────────── 4일차
 departure: {type:"spot", day:"d4", t:"05:40–08:30", stay:"출국", name:"장베이 공항 출국", cn:"重庆江北国际机场", badge:"ok",
   one:"새벽 4:50 출발. 늦지 않는 것만이 목표",
-  glance:[["비용","디디 약 30~60元"],["예약·입장","항공 확정 · 출발 터미널 재확인"]],
+  glance:[["비용","디디 약 30~60元"],["예약·입장","CA0439 · 충칭 T3 08:30 → 인천 T1 13:00 · 위탁 1PC"]],
   about:"관광 없는 날이에요. 04:30 기상, 04:50 호텔 출발, 05:40~06:00 공항 도착, 08:30 출발. 새벽이라 도로가 비어 있어서 시내에서 40분 안쪽으로 끝나는 날도 많아요. 그래도 비상시를 생각해 50분을 잡아 뒀어요.",
   story:[["새벽 공항 이동", "새벽 5시 전후엔 도로가 비어서 시내→공항이 40분 안쪽으로 끝나는 경우가 많아요. 그래도 디디는 전날 밤 예약 호출로 걸어 두는 게 안전해요. 예약 호출이 실패하면 호텔 프런트에 택시를 부탁하세요."], ["보조배터리", "중국 공항은 보조배터리 검사가 까다로워요. 용량·인증 표시(3C 마크)가 안 보이면 압수될 수 있으니 표시가 있는 걸 기내에 챙기세요. 위탁 수하물에는 넣지 마세요."], ["마지막 위안화", "공항 안 식당·편의점도 알리페이가 되니 현금은 굳이 다 쓸 필요 없어요. 동전·소액권은 다음 중국 여행용으로. 환전 스프레드가 커서 공항에서 되바꾸는 건 손해예요."], ["새벽의 충칭", "호텔을 나서면 해방비 골목에 아직 불이 켜져 있어요. 청소하는 사람과 배달 기사만 오가는 시간이라, 마지막으로 도시를 조용히 보게 돼요. 사진 한 장 남기기 좋은 순간이에요."]],
   see:["전날 밤 짐 다 싸두기", "남은 위안화는 소액이면 기념으로 (재환전 스프레드 손해)", "공항 가는 길 마지막 야경 (새벽 강변 조명)"],
   photo:["해당 없음"],
   route:["호텔 → 디디 약 50분. 11/30 밤까지 예약 호출(预约) 걸어두기"],
-  entry:["24시간 전 온라인 체크인 때 터미널 확정", "보조배터리 기내 반입 (100Wh 이하·1인 2개)"],
+  entry:["출발 터미널 충칭 장베이 T3 (CA0439 · 08:30)", "24시간 전 온라인 체크인", "보조배터리 기내 반입 (100Wh 이하·1인 2개)"],
   warn:["새벽 프런트는 인원이 적어요. 04:45엔 내려가기", "12/01 새벽~오전 이슬비 예보(38%). 접이식 우산"],
   planb:["예약 호출이 안 잡히면 호텔 프런트에 택시 요청: ‘请帮我叫一辆去机场的出租车’"],
   src:[SHEET]}
@@ -738,11 +762,18 @@ const STORY = {
 };
 
 /* ───── 입국카드 탭 (외국인 입국신고서 · 출국 전 온라인 작성) ─────
-   공개 저장소라 여권번호·전화·이메일·동행자 실명은 넣지 않는다. 항공편명도 시트에 없어 'e티켓 확인' 안내로 둔다. */
+   공개 저장소라 여권번호·전화·이메일·동행자 실명·예약번호는 넣지 않는다. 항공편명(CA0440·CA0439)은 비개인정보라 넣는다. */
 const ARRIVAL = {
   label: "입국카드",
   small: "출국 전",
   html: `<div class="daylead"><h2>입국카드, 출발 전에 온라인으로</h2><p>2025년 11월 20일부터 외국인은 중국에 들어가기 전에 입국 정보를 온라인으로 낼 수 있어요. 무료이고 한국어 화면도 있어요. 셋이 각자 1건씩 내고 QR만 캡처해 가면 입국장에서 카드 쓰는 시간이 사라져요.</p></div>
+
+<section class="panel" id="ac-flight"><h3>✈️ 우리 항공편 — Air China</h3>
+<div class="acf"><span class="acf-l">가는 편 · 11/28(토)</span><button type="button" class="cc lat" data-copy="CA0440" aria-label="가는 편 항공편명 복사"><span class="zht">CA0440</span><span class="ccl">복사</span></button></div>
+<p class="acnote">인천 제1여객터미널(T1) <b>14:00</b> → 충칭 장베이 제3터미널(T3) <b>16:55</b> · 3시간 55분 · 위탁 수하물 1PC(이코노미)</p>
+<div class="acf"><span class="acf-l">오는 편 · 12/01(화)</span><button type="button" class="cc lat" data-copy="CA0439" aria-label="오는 편 항공편명 복사"><span class="zht">CA0439</span><span class="ccl">복사</span></button></div>
+<p class="acnote">충칭 장베이 제3터미널(T3) <b>08:30</b> → 인천 제1여객터미널(T1) <b>13:00</b> · 3시간 30분 · 위탁 수하물 1PC(이코노미)</p>
+<p class="acnote">입국카드의 ‘항공편’ 칸에는 가는 편 <b>CA0440</b>을 넣으면 돼요. 4일차 새벽엔 충칭 T3에서 출발하니, 디디 목적지를 <b>T3 출발층</b>으로 찍으세요.</p></section>
 
 <section class="panel" id="ac-when"><h3>🕘 언제 · 어디서</h3><ul>
 <li><strong>시기</strong> — 출발 24시간 전 ~ 출발 전. 11/27(금) 저녁에 셋 다 쓰면 딱 맞아요. 공식 마감은 따로 없지만 너무 일찍 내면 항공편·숙소가 바뀌었을 때 다시 내야 해요</li>
@@ -759,7 +790,7 @@ const ARRIVAL = {
 <li><div class="sico" aria-hidden="true">1</div><div><b>여권 정보면 올리기</b><span>여권 종류는 ‘일반여권’. 사진이 있는 면을 안내 그림대로 찍어 올려요. PC로 하면 여권 사진면을 미리 폰으로 찍어 컴퓨터로 옮겨 두면 빨라요</span></div></li>
 <li><div class="sico" aria-hidden="true">2</div><div><b>기본 정보</b><span>영문 성·이름, 여권번호, 생년월일. 여권 사진면과 <b>철자·대문자까지 똑같이</b> 넣어요</span></div></li>
 <li><div class="sico" aria-hidden="true">3</div><div><b>개인 정보</b><span>성별·국적·직업·휴대폰 번호 같은 칸. 국적은 Korea(Republic of Korea), 번호는 +82로 시작하는 내 번호</span></div></li>
-<li><div class="sico" aria-hidden="true">4</div><div><b>여행 정보</b><span>입국일·출국일·도시·숙소는 아래 복사 버튼으로 그대로. 입국 목적은 <b>Tourism / Sightseeing</b>, 항공편명·경유지는 각자 e티켓 보고 직접</span></div></li>
+<li><div class="sico" aria-hidden="true">4</div><div><b>여행 정보</b><span>입국일·출국일·도시·숙소는 아래 복사 버튼으로 그대로. 입국 목적은 <b>Tourism / Sightseeing</b>, 항공편명은 <b>CA0440</b>(아래 복사 버튼), 경유지는 직항이라 비워 두면 돼요</span></div></li>
 <li><div class="sico" aria-hidden="true">5</div><div><b>동반자 정보 → 제출</b><span>가족·일행을 <b>한 신고에 함께</b> 넣는 칸이에요. 셋이 각자 1건씩 내면 비워 두고 제출하면 돼요. 각자 내면 QR도 각자 생겨요</span></div></li>
 </ol>
 </section>
@@ -773,7 +804,9 @@ const ARRIVAL = {
 <div class="acf"><span class="acf-l">입국일</span><button type="button" class="cc lat" data-copy="2026-11-28" aria-label="입국일 복사"><span class="zht">2026-11-28</span><span class="ccl">복사</span></button></div>
 <div class="acf"><span class="acf-l">출국일</span><button type="button" class="cc lat" data-copy="2026-12-01" aria-label="출국일 복사"><span class="zht">2026-12-01</span><span class="ccl">복사</span></button></div>
 <div class="acf"><span class="acf-l">위챗 · 알리페이 미니프로그램 검색어</span><button type="button" class="cc" data-copy="移民局12367" aria-label="미니프로그램 검색어 복사"><span class="zht">移民局12367</span><span class="ccl">복사</span></button></div>
-<p class="acnote">날짜 칸이 달력이면 골라도 되고, 직접 입력하는 칸이면 2026-11-28 형식으로 넣어요. 항공편명은 시트에 없으니 각자 항공권 e티켓(예약 확인서)을 보고 직접 넣어 주세요 — 직항이면 경유지 비워 두면 돼요.</p>
+<div class="acf"><span class="acf-l">항공편 · 가는 편 (11/28 Air China)</span><button type="button" class="cc lat" data-copy="CA0440" aria-label="가는 편 항공편명 복사"><span class="zht">CA0440</span><span class="ccl">복사</span></button></div>
+<div class="acf"><span class="acf-l">항공편 · 오는 편 (12/01 Air China)</span><button type="button" class="cc lat" data-copy="CA0439" aria-label="오는 편 항공편명 복사"><span class="zht">CA0439</span><span class="ccl">복사</span></button></div>
+<p class="acnote">날짜 칸이 달력이면 골라도 되고, 직접 입력하는 칸이면 2026-11-28 형식으로 넣어요. 항공편명은 위 두 버튼(CA0440·CA0439)을 그대로 붙여넣고, 직항이라 경유지는 비워 두면 돼요.</p>
 </section>
 
 <section class="panel" id="ac-tip"><h3>✍️ 칸마다 요령</h3>
@@ -781,7 +814,7 @@ const ARRIVAL = {
 <li><b>영문 성명 · 여권번호 · 생년월일</b><span>여권 사진면(영문) 기준 그대로. 이름 띄어쓰기, 대문자, 여권번호의 숫자·영문 순서까지 바꾸지 않기</span></li>
 <li><b>입국 목적</b><span>관광 = Tourism / Sightseeing. 목록에서 이걸 고르고, 비즈니스·환승은 고르지 않아요</span></li>
 <li><b>숙소 주소</b><span>호텔 이름만 말고 건물명·도로명·층까지. 德艺大厦 32층이 우리 프런트예요</span></li>
-<li><b>항공편 · 경유지</b><span>항공권 e티켓에서 편명·출도착 시간을 보고 각자 입력. 모르면 넣지 말고 비워 두는 편이 나아요</span></li>
+<li><b>항공편 · 경유지</b><span>가는 편 <b>CA0440</b>, 오는 편 <b>CA0439</b>(Air China 직항). 위 복사 버튼을 쓰고 경유지는 비워 두기</span></li>
 <li><b>QR은 3명 3장</b><span>입국장에서 폰 화면 밝기를 올려 보여주기. 스크린샷이면 사진 앱 즐겨찾기에 넣어 두면 바로 찾아요</span></li>
 </ol>
 </section>
@@ -796,6 +829,126 @@ const ARRIVAL = {
 </section>
 
 <p class="aclinks"><button type="button" class="linkbtn" data-goto-tab="d1">1일차 일정(입국 동선) 보기 →</button><button type="button" class="linkbtn" data-goto-tab="common">공통 탭(결제·이동·긴급) →</button></p>`
+};
+
+/* ───── 기념품 · 쇼핑 탭 (대상별 태그 · 해방비 구매처 · 반입 주의) ─────
+   가격은 2026-11 웹 조사(위안)와 1元≈200원 약산. 육포류는 한국 반입 금지 품목이라 note/warn 으로 반드시 표시한다. */
+const SHOPPING = {
+  label: "기념품",
+  small: "해방비",
+  title: "기념품 · 쇼핑 — 누구에게 뭘, 해방비 어디서",
+  lead: "회사용·지인용·가족용으로 나눠 골랐어요. 가격은 위안(元)과 원화 약산(1元≈200원)을 같이 적었고, 중국어 이름은 눌러서 복사해 고덕지도·디디에 붙여넣으면 돼요.",
+  warn: "먼저 이것만 — 육포·육가공품(张飞牛肉·腊肉·香肠)은 한국에 못 가져갑니다. 현지에서 드시거나 아예 사지 마세요. 신고 없이 들여오다 걸리면 과태료가 최대 1,000만 원이에요.",
+  countNote: "카드의 중국어 이름을 눌러 복사해 마트 직원에게 보여주면 가장 빨라요.",
+  filters: [["all", "전체"], ["work", "회사용"], ["friend", "지인용"], ["family", "가족용"]],
+  tags: {work: "회사용", friend: "지인용", family: "가족용"},
+  gifts: [
+    {name: "怪味胡豆 괴미후두", cn: "怪味胡豆", price: "10~20元/봉", krw: "2,000~4,000원", tags: ["work", "friend"],
+     why: "볶은 잠두(누에콩)에 매운맛·단맛·짠맛을 한꺼번에 입힌 충칭식 과자예요. 한입 크기라 책상 위에 돌리기 좋고, 봉지가 가벼워 여러 개 사도 부담이 없어요.",
+     where: "重百·永辉 마트 과자 코너, 츠지커우. 蝴蝶牌·华生园이 흔해요.",
+     note: "관광지 特产店에서는 같은 봉지를 1.5배쯤 받아요. 마트가 싸요."},
+    {name: "陈麻花 천마화", cn: "陈麻花", price: "10~30元/봉 · 散装 15~25元/斤(500g)", krw: "2,000~6,000원", tags: ["work", "family"],
+     why: "꽈배기를 바삭하게 튀긴 츠지커우 명물. 원맛·椒盐(소금후추)·꿀맛이 기본이라 사무실·집 양쪽에 무난해요. 개별 소포장이 많아요.",
+     where: "2일차 츠지커우에서 시식 후 구매. '陈昌银' 간판이 원조 계열로 알려져 있어요.",
+     note: "잘 부서져요. 위탁 가방 맨 위, 옷으로 감싸 넣으세요."},
+    {name: "重庆火锅底料 훠궈 저료", cn: "重庆火锅底料", price: "15~40元/봉(400~500g)", krw: "3,000~8,000원", tags: ["friend", "family"],
+     why: "충칭의 맛을 그대로 가져가는 1순위. 桥头는 맵기가 순하고 향이 진해 초보용, 德庄은 麻(얼얼함)가 강하고, 周君记·秋霞는 매운맛이 세요. 微辣·中辣·特辣로 나뉘어요.",
+     where: "마트가 가장 싸고 종류도 많아요. 츠지커우에서는 그 자리에서 볶는 手工 저료도 팔아요.",
+     note: "액체·기름이라 위탁만. 牛油(소기름) 제품은 축산물로 볼 수 있어 세관에서 걸릴 수 있어요."},
+    {name: "重庆小面 소면 밀키트", cn: "重庆小面", price: "30~55元(2~4인분) · 100元 안팎(6박스)", krw: "6,000~11,000원", tags: ["friend", "family"],
+     why: "면과 고추기름·화자오 소스가 들어 있어 물만 끓이면 충칭 아침 소면이 나와요. 金牌干溜·秦云老太婆摊摊·陈昌银 브랜드가 흔해요.",
+     where: "마트 면 코너, 공항 편의점에도 있어요.",
+     note: "무겁고 부피가 커요. 위탁 1PC(23kg) 무게를 미리 계산하세요."},
+    {name: "张飞牛肉 장페이 우육포", cn: "张飞牛肉", price: "20~60元(소포장 20~30元)", krw: "4,000~12,000원", tags: ["friend"],
+     why: "쓰촨 랑중의 명물 육포로 충칭 特产店에서도 흔히 팔아요. 개별포장이라 나눠 주기 좋지만, 한국에는 못 가져갑니다.",
+     where: "마트·特产店. 사기 전에 아래 주의를 꼭 보세요.",
+     note: "한국 반입 금지 품목(육가공품)이에요. 현지에서 드시거나 사지 마세요.", warn: true},
+    {name: "合川桃片 합천 도편", cn: "合川桃片", price: "15~30元/상자", krw: "3,000~6,000원", tags: ["family", "work"],
+     why: "찹쌀과 호두를 얇게 눌러 만든 전통 과자. 달지 않고 부드러워 어르신·아이 모두 잘 먹어요. 原味(단맛)·椒盐(짠맛) 두 가지.",
+     where: "마트·特产店 어디서나. 三江·川洲 브랜드가 대표예요.",
+     note: "습기에 약해요. 개봉 후엔 빨리 먹고, 가방 안에서 눌리지 않게."},
+    {name: "江津米花糖 강진 미화당", cn: "江津米花糖", price: "10~20元/봉", krw: "2,000~4,000원", tags: ["family", "work"],
+     why: "찹쌀을 튀겨 조청으로 뭉친 충칭 사람들의 어린 시절 과자. 玫瑰牌·荷花牌가 대표이고, 아이 있는 집 선물로 잘 맞아요.",
+     where: "마트 과자 코너.",
+     note: "부피가 커서 가방에서 자리를 많이 차지해요."},
+    {name: "羊角豆干 양각 두건", cn: "羊角豆干", price: "10~20元/봉", krw: "2,000~4,000원", tags: ["work", "family"],
+     why: "우룽 양각진의 쫄깃한 두부 건과자. 고기가 안 들어가 검역 걱정이 없고 개별포장이라 회사용으로 가장 안전해요.",
+     where: "마트 건과·과자 코너, 特产店.",
+     note: "麻辣(매운맛)과 五香(순한맛)이 있어요. 회사용은 五香이 무난해요."},
+    {name: "永川秀芽 영천수아 녹차", cn: "永川秀芽", price: "45~60元(100g 병) · 예물 상자 100~250元", krw: "9,000~50,000원", tags: ["family"],
+     why: "충칭의 대표 녹차. 순하고 향이 좋아 차 좋아하는 분께 예물로 잘 받아요. 云岭·香叙 브랜드가 흔해요.",
+     where: "마트 차 코너, 백화점 지하 식품관.",
+     note: "예물이면 상자 포장을 요청하고 영수증도 챙기세요."},
+    {name: "重庆沱茶 충칭 타차", cn: "重庆沱茶", price: "55~110元(250~500g)", krw: "11,000~22,000원", tags: ["family", "friend"],
+     why: "둥근 덩어리로 눌러 만든 발효차. 一颗一泡(한 덩이씩 우려내는) 소분 포장이 많아 아버지 세대 선물로 좋아요.",
+     where: "마트 차 코너, 重庆茶业 매장.",
+     note: "향이 강해서 다른 간식과 따로 밀봉하세요."},
+    {name: "江小白 강소백", cn: "江小白", price: "20元(100ml·40도)", krw: "4,000원", tags: ["friend"],
+     why: "한두 잔씩 담긴 작은 병 술. 병이 작아 무게·부피 부담이 적고, 라벨 문구가 재미있어 지인 선물로 센스 있어요.",
+     where: "마트 주류 코너, 편의점.",
+     note: "위탁 수하물로. 1인 2L·400달러까지 면세(19세 이상)이고, 면세점에서 산 술만 밀봉 상태로 기내에 가져갈 수 있어요."},
+    {name: "梅见 매견 청매주", cn: "梅见", price: "20~30元(330ml·12도)", krw: "4,000~6,000원", tags: ["friend"],
+     why: "충칭 강기주창이 만든 매실주. 도수가 낮고 달큰해서 술 잘 못 마시는 지인에게도 부담이 없어요.",
+     where: "마트 주류 코너, 편의점.",
+     note: "액체라 위탁. 기내 반입은 100ml 제한에 걸려요."},
+    {name: "熊猫·충칭 굿즈", cn: "熊猫纪念品", price: "10~40元(마그넷·엽서·키링) · 30~60元(미니 인형)", krw: "2,000~12,000원", tags: ["work", "friend"],
+     why: "판다·홍애동·경전철 모양 마그넷과 엽서가 가볍고 값싸요. 책상 위에 두는 소품이라 회사 동료 선물로 부담이 없어요.",
+     where: "MINISO LAND 解放碑店, 관광지 기념품점, 홍애동.",
+     note: "충칭 동물원 판다 굿즈는 동물원 매표소 옆 매장에서도 팔아요(일정엔 없음)."},
+    {name: "涪陵榨菜 부링 짜차이", cn: "涪陵榨菜", price: "3~5元/봉", krw: "600~1,000원", tags: ["work", "family"],
+     why: "충칭 훠궈·소면에 빠지지 않는 절임 채소. 한 봉이 몇 백 원이라 인원수 맞춰 사기 좋고 무게도 거의 없어요. 乌江 브랜드가 대표.",
+     where: "마트 절임·반찬 코너.",
+     note: "깡통·유리병은 위탁. 봉지형이 가볍고 안전해요."}
+  ],
+  storeLead: "해방비에서 걸어갈 수 있는 곳만 골랐어요. 무거운 저료·과자는 마트(重百·永辉), 예물 상자는 백화점, 굿즈는 MINISO 순서로 돌면 30~40분이면 끝나요. 숙소가 해방비에서 도보 7~10분이라, 짐은 호텔에 두고 나오세요.",
+  stores: [
+    {name: "중백마트 · 해방비 신화점", cn: "重百超市(解放碑新华店)", kind: "대형마트", addr: "重庆市渝中区民权路2号 重百大楼 B1层",
+     why: "해방비 한복판 重百大楼 지하 1층. 충칭 백화점 계열 마트 가운데 매장이 크고 토산품 진열이 많아, 저료·과자·차·짜차이를 한 번에 담을 수 있어요. 가격표가 붙어 있고 영수증도 나와요.",
+     best: "훠궈 저료·괴미후두·도편·짜차이·차"},
+    {name: "융후이 마트 · 자오창커우점", cn: "永辉超市(较场口店)", kind: "대형마트", addr: "重庆市渝中区民权路58号 聚源大厦 1层 (较场口역 7번 출구)",
+     why: "해방비에서 남쪽으로 한 블록, 자오창커우역 7번 출구 바로 앞이에요. 신선식품 비중이 높은 마트지만 토산품 코너도 충분하고, 관광지 特产店보다 값이 확실히 싸요.",
+     best: "저료·소면·과자 — 무거운 것 위주"},
+    {name: "신세기백화점 해방비상도", cn: "新世纪百货解放碑商都", kind: "백화점", addr: "重庆市渝中区青年路18号 重庆商社大厦 B1",
+     why: "예물용으로 포장이 필요한 차·과자 세트를 고르기 좋아요. 지하 1층이 식품관·마트라 선물 상자와 영수증을 같이 챙기기 편해요.",
+     best: "永川秀芽·沱茶 예물 상자, 과자 세트"},
+    {name: "충칭 노포 총집합 토산품점", cn: "重庆老字号总汇土特产(解放碑步行街店)", kind: "특산품점", addr: "重庆市渝中区八一路183号 (较场口역 9번 출구 도보 320m)",
+     why: "노포 브랜드 제품만 모아 둔 토산품점이에요. 브랜드를 하나씩 찾아다니지 않고 예물 세트를 한자리에서 고를 수 있어요.",
+     best: "브랜드 과자·차 예물 세트"},
+    {name: "바이이하오츠 거리(먹자골목)", cn: "八一好吃街", kind: "먹자골목", addr: "重庆市渝中区八一路181号 青年广场 1层",
+     why: "먹으면서 사는 곳. 포장 간식(마화·도편·짜차이)을 소량 사거나, 2일차 야식 동선 끝에 마지막 쇼핑을 붙이기 좋아요.",
+     best: "소량 포장 간식, 야식"},
+    {name: "MINISO LAND 해방비점", cn: "MINISO LAND 重庆解放碑店", kind: "굿즈숍", addr: "重庆市渝中区民族路166号 2077赛博城市 L1 (임강문역 1번 출구 도보 290m · 10:00~23:00)",
+     why: "1,600㎡가 넘는 대형 IP 매장이에요. 판다·홍애동·충칭 모양 굿즈와 캐릭터 상품이 많고, 밤 11시까지 열어서 저녁 식사 뒤에 들르기 좋아요.",
+     best: "판다 마그넷·키링·엽서, 캐릭터 상품"},
+    {name: "츠지커우 고진 (2일차)", cn: "磁器口古镇", kind: "특산품 골목", addr: "重庆市沙坪坝区磁器口正街", goto: "ciqikou", gotoLabel: "2일차 츠지커우 카드",
+     why: "천마화·그 자리에서 볶는 저료를 시식하며 고르는 곳. 같은 물건이 시내 마트보다 30~50% 비싸니, 맛보고 몇 봉만 사고 대량은 마트에서 사는 게 좋아요.",
+     best: "陈麻花 소량, 手工 훠궈 저료"}
+  ],
+  tips: [
+    "마지막 쇼핑은 11/30(월) 밤까지예요. 12/01은 04:30에 호텔을 나가서 상점이 다 닫혀 있어요.",
+    "관광지 特产店은 같은 브랜드 제품을 1.5~2배에 팔아요. 브랜드 저료·과자는 마트에서 사고, 관광지에선 시식과 소량만.",
+    "위탁은 1PC예요. 500g 저료 다섯 봉이면 2.5kg이니, 캐리어 무게를 재 가며 담으세요.",
+    "기름·액체 제품은 지퍼백 두 겹. 옷에 기름이 배면 세탁으로 잘 안 빠져요.",
+    "예물은 영수증을 챙기세요. 세관 신고 때 가격 확인이 쉽고 교환·환불에도 필요해요.",
+    "마트 계산대는 알리페이·위챗페이 모두 돼요. 200元을 넘으면 수수료 3%라 큰 결제는 나눠서 하세요."
+  ],
+  carry: [
+    "기내 액체류는 1병 100ml·1L 봉투까지. 매견·간장·기름 저료는 위탁으로 보내세요.",
+    "주류는 위탁 수하물로. 1인 2L·400달러 이하(19세 이상)까지 면세이고, 2025년 3월부터 병 수 제한은 없어요. 공항 면세점에서 산 술은 밀봉 상태로 기내에 가져갈 수 있어요.",
+    "육포·육가공품(张飞牛肉·腊肉·香肠)은 반입 금지. 신고 없이 걸리면 과태료 최대 1,000만 원.",
+    "牛油(소기름) 저료는 축산물로 판단될 수 있어요. 清油(식물성) 표기를 고르거나, 가져갈 땐 신고하고 검역관 판단을 받으세요.",
+    "차·과자·짜차이는 보통 반입돼요. 다만 농림축산물은 품목당 5kg·총 40kg·취득가 10만 원 이내 기준이 있어요.",
+    "마화·도편은 잘 부서져요. 위탁 가방 맨 위에 옷으로 감싸 넣으세요."
+  ],
+  src: [
+    ["충칭 기념품 15선·가격·구매 동선 (Trip.com 블로그)", "https://tw.trip.com/blog/chongqing-souvenirs/"],
+    ["충칭 특산품: 관광지 상점 vs 대형마트 가격 비교", "https://www.myhalou.com/news/article-703.html"],
+    ["고덕지도 — 重百超市(解放碑新华店)", "https://www.amap.com/place/B00170AOMC"],
+    ["고덕지도 — 永辉超市(较场口店)", "https://www.amap.com/place/B001782MHJ"],
+    ["MINISO LAND 해방비점 개장 (화룡망)", "https://www.cqnews.net/1/detail/1427023681262268416/web/content_1427023681262268416.html"],
+    ["관세청 — 여행자 휴대품 면세범위(주류 2L·400달러)", "https://customs.go.kr/seoul/cm/cntnts/cntntsView.do?cntntsId=829&mi=3721"],
+    ["법무부 — 축산물 휴대 반입 금지·과태료 안내", "https://immigration.go.kr/immigration/2455/subview.do"]
+  ]
 };
 
 const DAYS = [
@@ -860,6 +1013,7 @@ const METRO = {
 /* ───── 공통 탭 (어느 일차에도 해당되는 것) ───── */
 const COMMON = `<div class="daylead"><h2>어디서든 통하는 충칭 생존법</h2><p>장소와 상관없이 3박 4일 내내 해당되는 것들이에요.</p></div>
 <p class="callout" style="border-left-color:var(--river)"><strong>출국 전 하나 — 입국카드.</strong> 온라인으로 미리 내면 입국장에서 QR만 보여주면 돼요. 숙소명·주소·날짜 복사용 칸과 5단계 순서를 따로 모아 뒀어요. <button type="button" class="linkbtn" data-goto-tab="arrival">입국카드 가이드 →</button></p>
+<p class="callout" style="border-left-color:var(--gold)"><strong>기념품은 3일차 밤까지.</strong> 12/01은 04:30에 나가서 상점이 다 닫혀 있어요. 해방비 마트 3곳·예물용 백화점·MINISO, 그리고 육포처럼 반입이 안 되는 품목은 <button type="button" class="linkbtn" data-goto-tab="shopping">기념품 탭 →</button>에 정리했어요.</p>
 <p class="callout"><strong>충칭은 ‘층’이 거짓말을 해요.</strong> 산비탈 도시라 한 건물에 땅과 맞닿은 층이 여러 개예요. 홍애동 11층, 괴성루 22층이 지면이고, 지도 직선거리 300m가 실제로는 계단 15층일 수 있어요. 도보 10분 넘으면 디디가 원칙.</p>
 <section class="panel"><h3>결제</h3><ul><li>알리페이가 주력, 위챗페이가 백업. 서로 다른 카드를 등록</li><li><strong>200위안 룰</strong>: 1건 200元 이하는 수수료 0, 초과하면 <em>결제액 전체</em>에 3%. 큰 식사는 나눠서 결제</li><li>현금은 1인 200~300元, 10·20·50元 소액권</li><li>팁 문화 없음. 식당 물·물티슈는 유료(2~5元)인 곳이 많아요</li><li>테이블 QR 주문 식당이 많아요 → 위챗 로그인 필요</li></ul></section>
 <section class="panel"><h3>이동</h3><ul><li>디디: 알리페이·위챗 안의 ‘滴滴出行’. 장소 카드의 중국어 이름을 눌러 복사한 뒤 목적지에 붙여넣기</li><li>출발지 핀을 꼭 직접 확인. 같은 건물이라도 층마다 출입구 도로가 달라요</li><li>지하철은 아래 ‘지하철 타는 법’ 참고</li><li>오토바이·전동스쿠터가 인도로도 다녀요</li></ul></section>
@@ -942,6 +1096,49 @@ const SECTION = {
 };
 const listSection = key => p => ul(p[key]);
 
+/* ───── 기념품·쇼핑 탭 (대상별 태그 필터) ───── */
+const TAGS = (typeof SHOPPING !== "undefined" && SHOPPING && SHOPPING.tags) || {work:"회사용", friend:"지인용", family:"가족용"};
+let giftTag = "all";
+const giftHTML = g => `<article class="gift" data-tags="${esc((g.tags || []).join(" "))}">
+  <div class="gtop"><h4>${esc(g.name)}</h4><div class="gprice">${esc(g.price)}<span>약 ${esc(g.krw)}</span></div></div>
+  <div class="gtags">${(g.tags || []).map(t => `<span class="gtag ${esc(t)}">${esc(TAGS[t] || t)}</span>`).join("")}</div>
+  <div class="dish-m">${copyBtn(g.cn, "big")}</div>
+  <p>${esc(g.why)}</p>
+  ${g.where ? `<p class="gmeta"><b>어디서</b> ${esc(g.where)}</p>` : ""}
+  ${g.note ? `<p class="gmeta">${g.warn ? `<span class="gwarn">⚠ ${esc(g.note)}</span>` : esc(g.note)}</p>` : ""}</article>`;
+const storeHTML = s => `<article class="store"><h4>${esc(s.name)}<span class="sk">${esc(s.kind)}</span></h4>
+  <div class="addr">${esc(s.addr)}</div>
+  <div class="cn">${copyBtn(s.cn)}<a href="${AMAP(s.cn)}" target="_blank" rel="noopener">${esc(TRIP.map_label)} ↗</a>${s.goto ? `<button type="button" class="linkbtn" data-open="${esc(s.goto)}">${esc(s.gotoLabel || "가이드에서 보기")} →</button>` : ""}</div>
+  <p>${esc(s.why)}</p>
+  ${s.best ? `<p class="gmeta"><b>여기서 살 것</b> ${esc(s.best)}</p>` : ""}</article>`;
+function shoppingHTML(){
+  const f = SHOPPING.filters || [["all","전체"],["work","회사용"],["friend","지인용"],["family","가족용"]];
+  const tips = (SHOPPING.tips || []).map(t => `<li>${esc(t)}</li>`).join("");
+  const carry = (SHOPPING.carry || []).map(t => `<li>${esc(t)}</li>`).join("");
+  const src = (SHOPPING.src || []).map(([n, u]) => `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("");
+  return `<div class="daylead"><h2>${esc(SHOPPING.title || "기념품·쇼핑")}</h2><p>${esc(SHOPPING.lead || "")}</p></div>
+    ${SHOPPING.warn ? `<p class="callout">${esc(SHOPPING.warn)}</p>` : ""}
+    <section class="panel"><h3>누구에게 줄까 <small style="color:var(--muted);font-weight:400">눌러서 거르기</small></h3>
+    <div class="filters" id="giftfilters" role="group" aria-label="대상별 필터">${f.map(([k, l]) => `<button type="button" class="fbtn" data-filter="${esc(k)}" aria-pressed="${k === "all" ? "true" : "false"}">${esc(l)}</button>`).join("")}</div>
+    <p class="acnote"><b id="giftcount"></b> ${esc(SHOPPING.countNote || "")}</p></section>
+    <div id="giftlist">${SHOPPING.gifts.map(giftHTML).join("")}</div>
+    <section class="panel" style="margin-top:14px"><h3>해방비에서 어디서 살까</h3><p class="acnote">${esc(SHOPPING.storeLead || "")}</p></section>
+    ${(SHOPPING.stores || []).map(storeHTML).join("")}
+    ${tips ? `<section class="panel"><h3>사기 전에</h3><ul class="warnlist">${tips}</ul></section>` : ""}
+    ${carry ? `<section class="panel"><h3>기내 · 위탁 · 세관</h3><ul>${carry}</ul></section>` : ""}
+    ${src ? `<section class="panel"><h3>출처</h3><ul class="src">${src}</ul></section>` : ""}`;
+}
+function applyGiftFilter(){
+  const box = $("giftlist"); if (!box) return;
+  let n = 0;
+  for (const el of box.querySelectorAll("[data-tags]")) {
+    const on = giftTag === "all" || el.dataset.tags.split(" ").includes(giftTag);
+    el.hidden = !on; if (on) n++;
+  }
+  for (const b of document.querySelectorAll("#giftfilters [data-filter]")) b.setAttribute("aria-pressed", b.dataset.filter === giftTag ? "true" : "false");
+  const c = $("giftcount"); if (c) c.textContent = `${giftTag === "all" ? "전체" : (TAGS[giftTag] || giftTag)} ${n}개`;
+}
+
 function detailHTML(id){
   const p = PLACES[id]; const toc = p.type === "spot" ? SPOT_TOC : SHOP_TOC;
   const day = DAYS.find(d => d.id === p.day); const stops = day.flow.filter(x => x.stop).map(x => x.stop);
@@ -960,8 +1157,10 @@ function detailHTML(id){
 /* ───── 라우팅 ───── */
 const HAS_STORY = typeof STORY !== "undefined" && STORY && STORY.html;
 const HAS_ARRIVAL = typeof ARRIVAL !== "undefined" && ARRIVAL && ARRIVAL.html;
+const HAS_SHOPPING = typeof SHOPPING !== "undefined" && SHOPPING && SHOPPING.gifts && SHOPPING.gifts.length;
 const TABS = [...(HAS_ARRIVAL ? [{id:"arrival", label:ARRIVAL.label || "입국카드", small:ARRIVAL.small || "출국 전"}] : []),
   ...DAYS.map(d => ({id:d.id, label:d.tab, small:d.date})), {id:"common", label:"공통", small:"결제·말·긴급"},
+  ...(HAS_SHOPPING ? [{id:"shopping", label:SHOPPING.label || "기념품", small:SHOPPING.small || "쇼핑"}] : []),
   ...(HAS_STORY ? [{id:"story", label:STORY.label || "여행 이야기", small:STORY.small || "역사·상식"}] : [])];
 const $ = id => document.getElementById(id);
 let lastDay = "d1";
@@ -982,6 +1181,14 @@ function render(){
   }
   if (tab === "arrival" && HAS_ARRIVAL) {
     $("view").innerHTML = ARRIVAL.html;
+    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (tab === "shopping" && HAS_SHOPPING) {
+    $("view").innerHTML = shoppingHTML();
+    applyGiftFilter();
     [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
     try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     window.scrollTo(0, 0);
@@ -1052,6 +1259,7 @@ function copyDone(el, ok){
   }, 1600);
 }
 document.addEventListener("click", async e => {
+  const filt = e.target.closest("[data-filter]"); if (filt) { giftTag = filt.dataset.filter; applyGiftFilter(); return; }
   const c = e.target.closest("[data-copy]");
   if (c) { e.preventDefault(); copyDone(c, await copyText(c.dataset.copy)); return; }
   const open = e.target.closest("[data-open]"); if (open) { location.hash = "p-" + open.dataset.open; return; }
