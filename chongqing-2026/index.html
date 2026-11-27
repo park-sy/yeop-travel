@@ -1367,7 +1367,7 @@ const CAREA = {}; if (HAS_CAFES) for (const [k, l] of CAFES.areas || []) CAREA[k
 const CBADGE = {ok:["영업 확인", "b-ok"], wait:["웨이팅", "b-wait"], cand:["현장 확인", "b-walk"]};
 let cafeArea = "all", cafeTag = "all";
 const cafeCard = s => `<article class="ccard" data-area="${esc(s.area)}" data-tags="${esc((s.tags || []).join(" "))}">
-  ${(s.photos || []).length ? `<div class="cg">${(s.photos || []).map(([k, cap]) => IMG[k] ? `<figure><img src="${IMG[k]}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>` : "").join("")}<span class="swipe">옆으로 →</span></div>` : ""}
+  ${(s.photos || []).length ? `<div class="cg">${(s.photos || []).map(([k, cap]) => IMG[k] ? `<figure><img src="${IMG[k]}" alt="${esc(cap)}" loading="lazy"><figcaption>${esc(cap)}</figcaption></figure>` : "").join("")}</div>` : ""}
   <div class="chead"><span class="carea">${esc(CAREA[s.area] || s.area)}</span>${(s.tags || []).map(t => `<span class="gtag ${esc(t)}">${esc(CAFES.tags[t] || t)}</span>`).join("")}${s.badge && CBADGE[s.badge] ? `<span class="badge ${CBADGE[s.badge][1]}">${CBADGE[s.badge][0]}</span>` : ""}</div>
   <h4>${esc(s.name)}</h4>
   <div class="cn">${copyBtn(s.cn, "big")}</div>
@@ -1431,6 +1431,11 @@ const TABS = [...(HAS_ARRIVAL ? [{id:"arrival", label:ARRIVAL.label || "입국�
 const $ = id => document.getElementById(id);
 let lastDay = "d1";
 
+function selectTab(tab){
+  for (const b of [...$("tabs").children]) b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false");
+  const a = [...$("tabs").children].find(b => b.dataset.id === tab);
+  if (a && a.scrollIntoView) { try { a.scrollIntoView({inline:"center", block:"nearest"}); } catch (e) {} }
+}
 let pendingJump = null;
 function render(){
   const h = location.hash.slice(1);
@@ -1447,7 +1452,7 @@ function render(){
   }
   if (tab === "arrival" && HAS_ARRIVAL) {
     $("view").innerHTML = ARRIVAL.html;
-    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    selectTab(tab);
     try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     window.scrollTo(0, 0);
     return;
@@ -1455,7 +1460,7 @@ function render(){
   if (tab === "shopping" && HAS_SHOPPING) {
     $("view").innerHTML = shoppingHTML();
     applyGiftFilter();
-    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    selectTab(tab);
     try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     window.scrollTo(0, 0);
     return;
@@ -1463,7 +1468,7 @@ function render(){
   if (tab === "cafes" && HAS_CAFES) {
     $("view").innerHTML = cafesHTML();
     applyCafeFilter();
-    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    selectTab(tab);
     try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     window.scrollTo(0, 0);
     return;
@@ -1475,13 +1480,13 @@ function render(){
     if ($("phrases") && typeof PHRASES !== "undefined") $("phrases").innerHTML = PHRASES.map(([ko, zh]) => `<div class="phrase"><span class="zhb">${esc(zh)}</span><span class="ko">${esc(ko)}</span><button type="button" data-copy="${esc(zh)}">복사</button></div>`).join("");
   } else if (tab === "story" && HAS_STORY) {
     $("view").innerHTML = STORY.html;
-    [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+    selectTab(tab);
     try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
     return;
   } else {
     lastDay = tab; $("view").innerHTML = dayHTML(DAYS.find(d => d.id === tab));
   }
-  [...$("tabs").children].forEach(b => b.setAttribute("aria-selected", b.dataset.id === tab ? "true" : "false"));
+  selectTab(tab);
   try { localStorage.setItem(TRIP.slug + "-tab", tab); } catch (e) {}
 }
 function initialTab(){
