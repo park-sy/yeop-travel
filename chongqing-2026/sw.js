@@ -5,7 +5,7 @@
      현지 데이터가 느려도 바로 뜨는 쪽을 골랐다
    - 구글 폰트: 한 번 받은 글꼴 파일은 저장본 사용 (없으면 기본 글꼴로 보임)
    - 나머지(고덕지도 등 바깥 링크)는 건드리지 않는다 */
-const VERSION = "d0ba3f8fe6ec";
+const VERSION = "46ed20725ae8";
 const CACHE = "trip-chongqing-2026-" + VERSION;
 const FONTS = "trip-fonts";
 const SHELL = ["./", "manifest.webmanifest", "icon.png"];
