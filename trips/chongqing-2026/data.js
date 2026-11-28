@@ -92,7 +92,7 @@ hongyadong: {type:"spot", day:"d1", t:"21:00–21:25", stay:"15~25분", name:"�
   planb:["인파가 심하면 11층 전망대만 보고 케이스 1로"],
   src:[SHEET]},
 
-jiucun: {type:"shop", day:"d1", t:"21:30 / 21:45", stay:"식사 75분", name:"지우춘 카오나오화 (해방비점)", cn:"九村烤脑花(解放碑店)", badge:"line",
+jiucun: {type:"shop", day:"d1", t:"21:30 / 21:45", stay:"식사 75분", name:"지우춘 카오나오화 (해방비점)", cn:"九村烤脑花(解放碑店)", badge:"wait",
   one:"돼지 뇌 구이와 숯불 꼬치. 온라인 줄서기 없어 현장 대기",
   glance:[["1인 예산","약 80~90元"],["영업시간","15:30~02:30, 대중점평 4.6"],["위치","较场口 10号 美力大厦 옆 1층 (较场口역 6A출구 100m)"],["예약·웨이팅","온라인 예약·줄서기 미지원 → 현장 웨이팅 또는 전화 023-63039077"]],
   about:{text:"‘두 강의 무형문화유산(两江非遗)’ 간판을 단 충칭 로컬 꼬치집 체인이에요. 이름은 카오나오화(烤脑花, 돼지 뇌 구이)지만 후기에선 양꼬치·숯불 꼬치가 더 유명해요. 손님 대부분이 현지인이에요. 충칭에서 ‘카오나오화’는 술안주로 워낙 흔한 음식이라, 뇌 요리를 파는 집이 곧 야식집이라는 뜻이에요. 진열대에서 꼬치를 직접 집어 오는 방식이라 처음엔 어리둥절하지만, 한 번 해보면 편해요.",
@@ -888,15 +888,15 @@ const CAFES = {
 const DAYS = [
  {id:"d1", tab:"1일차", date:"11/28 토", iso:"2026-11-28", title:"도착하고 홍애동 야경",
   sub:"17:00 착륙 → 체크인 → 드론쇼 → 첸쓰먼대교 → 홍애동 → 카오나오화. 시트의 C안 기준이에요.",
-  flow:[{stop:"airport"},{move:"didi",min:"45~60분",cost:"약 30元"},{stop:"hotel"},{move:"walk",min:"5~10분"},{stop:"wuchaoshou"},
-   {move:"metro",min:"15~20분",cost:"1인 2元",note:"小什字 5A출구 → 6호선 1정거장 → 大剧院 5번 출구",
+  flow:[{stop:"airport"},{move:"didi",min:"40~60분",cost:"약 60~90元"},{stop:"hotel"},{move:"walk",min:"5~10분"},{stop:"wuchaoshou"},
+   {move:"metro",min:"15~20분",cost:"1인 2元",note:"小什字 5A출구 → 6호선 1정거장 → 大剧院역 3-1번(3A) 출구",
     steps:["우차오쇼우에서 나와 小什字(샤오스쯔)역 <b>5A 출구</b>로 들어가기. 1·6호선 환승역이라 표지판에서 <b>6号线</b>을 따라가요",
      "입구 보안검색(安检): 가방을 X-ray 벨트에 올리고 통과",
      "개찰구 스캐너에 각자 알리페이 승차 QR을 대기. 초록불·삑 소리 나면 통과",
      "6호선 승강장에서 표지판의 <b>下一站(다음 역) = 大剧院</b>인 쪽을 타요. 반대쪽은 上新街(남쪽) 방향",
      "1정거장 뒤 <b>大剧院(따쥐위안)</b> 하차",
      "나갈 때 개찰구에 <b>QR 한 번 더</b> 찍어야 요금이 결제돼요",
-     "<b>5번 출구</b>로 나가면 대극장 쪽. 드론쇼 자리 잡으러 강변으로"]},{stop:"theatre"},
+     "역 안 ‘大剧院’ 표지판을 따라 <b>3-1번(3A) 출구</b>로 나가면 대극장 쪽 (4번 출구 아님). 드론쇼 자리 잡으러 강변으로"]},{stop:"theatre"},
    {move:"walk",min:"바로 연결",note:"20:40 인파보다 먼저 다리로"},{stop:"qiansimen"},{move:"walk",min:"다리 끝 = 11층"},{stop:"hongyadong"},
    {branch:"여기서 두 갈래",note:"케이스 1: 11층만 보고 평지 15분 → 21:30 착석, 케이스 2: 1층까지 내려갔다 오르막 20분 → 21:45 착석"},
    {move:"didi",min:"5~10분",cost:"약 6~10元",note:"홍애동 큰길에서 호출, 걸으면 1.8km 30분"},{stop:"jiucun"},{move:"didi",min:"5분",cost:"약 5元",note:"걸으면 1.1km 21분, 밤엔 디디"},{minor:true,t:"23:00",name:"호텔 복귀",note:"내일 7시 출발"}]},
@@ -905,7 +905,7 @@ const DAYS = [
   flow:[{minor:true,t:"07:00",name:"호텔 출발"},{move:"walk",min:"10~15분",note:"약 0.8km"},{stop:"xiaomian"},{move:"didi",min:"9분 (+호출 여유)",cost:"약 5元"},{stop:"kuixinglou"},
    {move:"didi",min:"25~40분",cost:"약 10元"},{stop:"liziba"},{move:"didi",min:"25~40분",cost:"약 12元"},{stop:"snap"},
    {move:"walk",min:"10~15분"},{stop:"yangji"},{move:"walk",min:"근처"},{stop:"cafe1"},
-   {move:"didi",min:"35~50분",cost:"약 20元",note:"주말 진입로 정체"},{stop:"ciqikou"},{move:"didi",min:"약 30분",cost:"약 5元",note:"15:30 극장 도착 목표"},{stop:"show1949"},
+   {move:"didi",min:"35~50분",cost:"약 20元",note:"주말 진입로 정체"},{stop:"ciqikou"},{move:"didi",min:"10~20분",cost:"약 10元",note:"같은 磁器口 지역, 15:30 극장 도착 목표"},{stop:"show1949"},
    {move:"didi",min:"40~60분",cost:"약 20元",note:"퇴근길 정체"},{stop:"laotangkou"},{move:"walk",min:"20~30분",note:"해방비 산책으로 소화 겸 이동, 호텔은 안 들러요"},{stop:"massage"},
    {move:"walk",min:"5분",note:"같은 블록"},{stop:"bayilu"},{move:"walk",min:"약 20분",note:"1.1km, 또는 디디 5분 약 5元"},{minor:true,t:"22:30",name:"호텔 복귀",note:"야식 생략하면 21:40~22:00"}]},
  {id:"d3", tab:"3일차", date:"11/30 월", iso:"2026-11-30", title:"래플스시티, 십팔제, 남안구, 장강삭도",
@@ -917,7 +917,7 @@ const DAYS = [
    {move:"didi",min:"20~30분",cost:"약 10元"},{stop:"cableway"},{move:"walk",min:"5분"},{minor:true,t:"21:35",name:"호텔 복귀·짐 정리",note:"새벽 공항 디디 예약 호출 걸어두기"}]},
  {id:"d4", tab:"4일차", date:"12/01 화", iso:"2026-12-01", title:"새벽 공항",
   sub:"관광 없이 바로 공항으로 가요.",
-  flow:[{minor:true,t:"04:30",name:"기상·체크아웃",note:"04:45엔 로비로"},{move:"didi",min:"약 50분",cost:"예약 호출",note:"04:50 출발"},{stop:"departure"}]}
+  flow:[{minor:true,t:"04:30",name:"기상·체크아웃",note:"04:45엔 로비로"},{move:"didi",min:"40~50분",cost:"약 60~90元",note:"04:50 출발, 전날 밤 예약 호출"},{stop:"departure"}]}
 ];
 const PHRASES = [["우리 세 명이에요", "我们三个人"], ["덜 맵게 해주세요", "微辣"], ["고수 빼주세요", "不要香菜"], ["창가 자리 있어요?", "有靠窗的位置吗？"],
  ["계산할게요", "买单"], ["화장실 어디예요?", "洗手间在哪里？"], ["알리페이 돼요?", "可以用支付宝吗？"], ["이거 얼마예요?", "这个多少钱？"], ["포장해 주세요", "打包"], ["괜찮아요(거절)", "不用了"],
